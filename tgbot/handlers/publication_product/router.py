@@ -1,0 +1,27 @@
+from aiogram import *
+from aiogram.fsm.context import FSMContext
+from aiogram.filters.command import Command
+from states.states import publication_product as StatePublication_product
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+from handlers.publication_product import publication_product_class
+
+publication_product_router = Router()
+
+publication_product_router.callback_query.register(publication_product_class.Publication_product_name().start_of_step, lambda c: c.data == 'publication_product')
+publication_product_router.callback_query.register(publication_product_class.Publication_product.back_publication_product, lambda c: c.data == 'back_publication_product')
+
+publication_product_router.message.register(publication_product_class.Publication_product_name().get_answer, StatePublication_product.name)
+
+publication_product_router.message.register(publication_product_class.Publication_product_description().get_answer, StatePublication_product.description)
+
+publication_product_router.message.register(publication_product_class.Publication_product_photo().get_answer, StatePublication_product.photo)
+
+publication_product_router.message.register(publication_product_class.Publication_product_price().get_answer, StatePublication_product.price)
+
+publication_product_router.callback_query.register(publication_product_class.Publication_product_category_one_level().get_answer, StatePublication_product.category_one_level)
+
+publication_product_router.callback_query.register(publication_product_class.Publication_product_category_two_level().get_answer, StatePublication_product.category_two_level)
+
+publication_product_router.callback_query.register(publication_product_class.Publication_product_category_three_level().get_answer, StatePublication_product.category_three_level)
+
+

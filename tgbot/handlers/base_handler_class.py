@@ -1,0 +1,134 @@
+from aiogram.filters.command import Command
+from aiogram import types
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.fsm.context import FSMContext
+from database.users import Users_database as DB_users
+from database.location import Location_database as DB_location
+from states import states
+from abc import ABC, abstractmethod
+
+class Base_hanler:
+
+    @staticmethod
+    async def mssage_answer(event : types.CallbackQuery|types.Message|types.BotCommand, 
+                            text : str, reply_markup: types.InlineKeyboardMarkup = None):
+        if type(event) == types.CallbackQuery:
+            await event.message.answer(text, reply_markup=reply_markup)
+        else:
+            await event.answer(text, reply_markup=reply_markup)
+
+    @staticmethod
+    async def update_data_state(event : types.CallbackQuery|types.Message|types.BotCommand, 
+                                state : FSMContext,
+                                key : str):
+        
+        data_state = await state.get_data()
+
+        if type(event) == types.CallbackQuery:
+            event_data = event.data
+        else:
+            event_data = event.text
+
+        if 'skip' in event_data or 'back' in event_data:
+            data_state[key] = None
+        
+        elif 'current' in event_data:
+            pass
+        else:
+            data_state[key] = event_data
+        
+        await state.update_data(data_state)
+
+    @staticmethod
+    async def get_state_object(name_state: str, name_state_group: str, modele: __module__): 
+        try:
+            state_group = getattr(modele, name_state_group)
+            state = getattr(state_group, name_state)
+            return state
+        except Exception as e:
+            print(e)
+        
+
+class steps_interface(ABC):
+
+    @abstractmethod
+    async def start_of_step(self ,call : types.CallbackQuery|types.Message, state : FSMContext):
+        pass
+
+    @abstractmethod
+    async def get_answer(self ,call : types.CallbackQuery|types.Message, state : FSMContext):
+        pass
+        
+
+class Steps_base (Base_hanler, steps_interface):
+
+    def __init__(self, name : str = 'base_step', module : str = 'base'):
+        self.name = name
+        self.module = module
+        self.key_data_in_state = f'{self.module}_{self.name}'
+
+    async def start_of_step(self, call : types.CallbackQuery, state : FSMContext):
+        stop_func = await self._before_start_of_step(call, state)
+        if stop_func == True:
+            return
+
+        new_state = await Base_hanler.get_state_object(self.name, self.module, states)
+        await state.set_state(new_state)
+
+        await self._save_step_in_state(call, state)
+        await self._send_a_question(call, state)
+        await self._after_start_of_step(call, state)
+
+    async def get_answer(self, call : types.CallbackQuery|types.Message, state : FSMContext):
+        stop_func = await self._before_get_answer(call, state)
+        if stop_func == True:
+            return
+        
+        await self._save_answer_data(call, state)
+        await self._go_to_next_step(call, state)
+
+        await self._after_get_answer(call, state)
+
+    async def _save_step_in_state(self, call : types.CallbackQuery|types.Message, state : FSMContext):
+        data_state = await state.get_data()
+
+        if f'ar_func_{self.module}' not in data_state or type(data_state[f'ar_func_{self.module}']) != list:
+            data_state[f'ar_func_{self.module}'] = []
+        if type(call) == types.CallbackQuery and 'back' in call.data:
+            return
+        
+        data_state[f'ar_func_{self.module}'].append(self.start_of_step)
+        await state.update_data(data_state)
+
+    async def _send_a_question(self, call : types.CallbackQuery|types.Message, state : FSMContext):
+        builder = await self._get_builder_inline_keyboard_for_question(call, state)
+        text = await self._get_text_for_question(call, state)
+        await Base_hanler.mssage_answer(call, text, builder.as_markup())
+
+    async def _save_answer_data(self, call : types.CallbackQuery|types.Message, state : FSMContext):
+        await Base_hanler.update_data_state(call, state, f'{self.module}_{self.name}')
+
+    async def _go_to_next_step(self, call : types.CallbackQuery, state : FSMContext):
+        pass
+
+    async def _get_builder_inline_keyboard_for_question(self, call : types.CallbackQuery|types.Message, state : FSMContext) -> InlineKeyboardBuilder:
+        builder = InlineKeyboardBuilder()
+        builder.row(types.InlineKeyboardButton(
+            text="Базовая кнопка", callback_data="Базовая кнопка")
+        )
+        return builder
+        
+    async def _get_text_for_question(self, call : types.CallbackQuery|types.Message, state : FSMContext) -> str:
+        return "Ваш вопрос?"
+    
+    async def _before_start_of_step(self, call : types.CallbackQuery, state : FSMContext):
+        pass
+
+    async def _after_start_of_step(self, call : types.CallbackQuery, state : FSMContext):
+        pass
+
+    async def _before_get_answer(self, call : types.CallbackQuery|types.Message, state : FSMContext):
+        pass
+
+    async def _after_get_answer(self, call : types.CallbackQuery|types.Message, state : FSMContext):
+        pass
