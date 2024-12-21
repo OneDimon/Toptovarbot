@@ -1,0 +1,36 @@
+# Системные файлы
+*.DS_Store
+*.log
+*.pyc
+*.pyo
+__pycache__/
+
+# Виртуальные окружения
+venv/
+env/
+
+# Конфиденциальные файлы
+*.env
+secrets.json
+
+# Файлы IDE и редакторов
+.vscode/
+.idea/
+*.swp
+
+# Логи и кеши
+*.log
+*.cache
+*.pid
+*.gz
+wa-cache/
+wa-data/
+
+
+
+# Файлы, создаваемые операционными системами
+Thumbs.db
+desktop.ini
+
+# Файлы конфигурации
+wa-config/

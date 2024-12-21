@@ -2,4 +2,5 @@ test.py
 .vscode
 .vs
 .venv
+.env
 __pycache__
