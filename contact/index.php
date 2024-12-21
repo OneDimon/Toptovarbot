@@ -1,3 +1,3 @@
 <?
-include_once 'C:\OSPanel\domains\tovarka\vue_catalog\dist\index.html';
+include_once '\vue_catalog\dist\index.html';
 ?>
