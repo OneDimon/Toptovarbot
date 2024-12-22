@@ -38,7 +38,7 @@ export default {
         this.sendAjaxRequest(value)
       },
       sendAjaxRequest(value) {
-        axios.get('http://tovartest.ru/ajax_bot_tovar/contacts.php', {
+        axios.get('/ajax_bot_tovar/contacts.php', {
             params: {
               link: value
             }

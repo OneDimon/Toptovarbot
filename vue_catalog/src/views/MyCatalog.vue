@@ -32,7 +32,7 @@ export default {
         this.sendAjaxRequest(value)
       },
       sendAjaxRequest(value) {
-        axios.get('http://tovartest.ru/ajax_bot_tovar/catalog.php', {
+        axios.get('/ajax_bot_tovar/catalog.php', {
             params: {
                 hash_response: value
             }

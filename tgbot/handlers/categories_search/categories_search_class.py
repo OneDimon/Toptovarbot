@@ -157,7 +157,7 @@ class categories_search_confirm (Steps_base):
 
     async def __response_finish(self, call: types.CallbackQuery | types.Message, state: FSMContext):
         data_state = await state.get_data()
-        link = 'https://ozon.ru/search/?q=' + data_state['hash_categories_search']
+        link = 'http://tovartest.ru/contact/?link=' + data_state['hash_categories_search']
         await self.mssage_answer(call, 'Ваш поиск завершен, вы можете посмотреть результаты поиска \n' + link + '',)
 
         

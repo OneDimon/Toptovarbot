@@ -288,10 +288,10 @@ class seller_survey_confirm(Steps_base):
     
 
     async def __message_answer_15_min(self, call: types.CallbackQuery | types.Message, state: FSMContext, hash_result):
-        text = "по данной ссылке вы можете посмтреть промежуточный результат опроса продавцов: " + 'https://tovar/response_seller/?hash=' + hash_result
+        text = "по данной ссылке вы можете посмтреть промежуточный результат опроса продавцов: " + 'http://tovartest.ru/response_seller/?hash=' + hash_result
         await self.mssage_answer(call, text)
 
     async def __message_answer_30_min(self, call: types.CallbackQuery | types.Message, state: FSMContext, hash_result):
-        text = "по данной ссылке вы можете посмтреть окнчательный результат опроса продавцов: " + 'https://tovar/response_seller/?hash=' + hash_result
+        text = "по данной ссылке вы можете посмтреть окнчательный результат опроса продавцов: " + 'http://tovartest.ru/response_seller/?hash=' + hash_result
         await self.mssage_answer(call, text)
         
