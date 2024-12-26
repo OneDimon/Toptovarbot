@@ -23,7 +23,7 @@ class Response_seller():
     async def send_request_info(self, call: types.CallbackQuery, state: FSMContext):
         request_info = await DB().get_request_info_fields(call.from_user.id)
         if request_info == None:
-            call.message.answer("На данный момент нет активных запросов")
+            await call.message.answer("На данный момент нет активных запросов")
         await DB().set_request_status_in_progress(request_info['request_id'])
         await state.set_state(RS_state.start)
 
@@ -105,13 +105,13 @@ class Response_seller():
 
         if result_photo_verification:
             await state.set_state(RS_state.there_is_a_product_photo_uploaded)
-            await message.bot.download(result_photo_verification, F'img/{result_photo_verification}.jpg')
+            await message.bot.download(result_photo_verification, F'{os.getcwd()}/tgbot/img/{result_photo_verification}.jpg')
 
             if 'number_item' in data_context:
                 data_context['number_item'] += 1
             else:
                 data_context['number_item'] = 0
-            data_context['response'].append({'photo' : f'img/{result_photo_verification}.jpg'})
+            data_context['response'].append({'photo' : f'{os.getcwd()}/tgbot/img/{result_photo_verification}.jpg'})
         await message.answer("Ведите название продукции")
         await state.update_data(data = data_context)
 

@@ -11,6 +11,8 @@ from aiogram import filters
 user_router = Router()
 
 user_router.message.register(User.start, Command("start"))
+user_router.message.register(User.seller, Command("seller_menu"))
+user_router.message.register(User.buyer, Command("buyer_menu"))
 user_router.callback_query.register(User.main_menu, lambda c: c.data == 'main_menu')
 user_router.callback_query.register(User.seller, lambda c: c.data == 'seller')
 user_router.callback_query.register(User.buyer, lambda c: c.data == 'buyer')

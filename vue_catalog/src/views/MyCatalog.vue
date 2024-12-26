@@ -46,7 +46,7 @@ export default {
                     price: element.price,
                     count: element.quantity_product,
                     contacts: element.contact,
-                    image: '/tgbot/' + element.link_photo,
+                    image:  element.link_photo,
                 })
             });
 

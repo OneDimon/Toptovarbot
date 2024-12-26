@@ -28,7 +28,7 @@ class Referral_program (Base_hanler):
         builder.row(types.InlineKeyboardButton(text="оформить подписку", callback_data="subscription_menu"))
         builder.row(types.InlineKeyboardButton(text="посмотреть таблицу рефералов", callback_data="referral_table"))
         builder.row(types.InlineKeyboardButton(text="в главное меню", callback_data="main_menu"))
-        await call.message.answer(table_text, reply_markup=builder.as_markup())
+        await self.mssage_answer(call, table_text, builder.as_markup())
 
     async def generate_referral_table(referrals):
         table_text = "```\n| Уровень | ID Пользователя | ID Реферера | Баллы |\n"
@@ -130,7 +130,7 @@ class Subscription (Base_hanler):
         text += '2. неограниченное количество запросов продавцам онлайн \n'
         text += '3. неограниченное количество запросов по категориям\n'
         text += '4. получать доход с рефферальной программы (необходимо купить месячную подписку)\n'
-        await call.message.answer(text, reply_markup=builder.as_markup())
+        await self.mssage_answer(call, text, builder.as_markup())
 
     async def buy_subscription_1_day(self, call: types.CallbackQuery, state: FSMContext):
         price_subscription = 2
@@ -149,11 +149,11 @@ class Subscription (Base_hanler):
         user = await User._search_user(call.from_user.id)
         if_subscription = await User._if_subscribshed(call.from_user.id)
         if(if_subscription):
-            await call.message.answer("Вы уже оформили подписку!")
+            await self.mssage_answer(call, "Вы уже оформили подписку!", None)
         elif((data_user_ref_program[0][9] if data_user_ref_program[0][9] != None else 0) < price_subscription):
             builder = InlineKeyboardBuilder()
             builder.row(types.InlineKeyboardButton(text="перейти к пополнению баланса", callback_data="balance_menu"))
-            await call.message.answer("Недостаточно средств, пожалуйста, пополните баланс!", reply_markup=builder.as_markup())
+            await self.mssage_answer(call, "Недостаточно баллов для покупки подписки!", builder.as_markup())
         else:
             await Referral_program().buy_subscription(call.from_user.id, price_subscription)
             if type_subscription == 'month':
@@ -162,7 +162,7 @@ class Subscription (Base_hanler):
                 await User._add_subscribtion(call.from_user.id, datetime.now() + relativedelta(days=1))
             builder = InlineKeyboardBuilder()
             builder.row(types.InlineKeyboardButton(text="в главное меню", callback_data="main_menu"))
-            await call.message.answer("Подписка оформлена!", reply_markup=builder.as_markup())
+            await self.mssage_answer(call, "Подписка оформлена!", builder.as_markup())
             await Subscription().subscription_menu(call, state)
     
     async def get_price_subscription(self, status):

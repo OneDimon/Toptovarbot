@@ -3,6 +3,8 @@
         <table>
             <tr>
                 <th>контакты продавцов</th>
+                <th>адрес продавца</th>
+                <th>фото адреса</th>
             </tr>
             <tr v-if="catalog.length === 0">
                 <td colspan="2">По вашему запросу не найдено контактов</td>
@@ -15,6 +17,10 @@
                       <li v-for="value in item.contacts[key]" :key="value">{{ value }}</li>
                     </ul>
                   </div>
+                </td>
+                <td>{{ item.locations.address }}</td>
+                <td>
+                  <img :src="'/tgbot/' + item.locations.photo" alt="Фото адреса" width="100">
                 </td>
             </tr>
         </table>
@@ -38,28 +44,46 @@ export default {
         this.sendAjaxRequest(value)
       },
       sendAjaxRequest(value) {
-        axios.get('/ajax_bot_tovar/contacts.php', {
+        axios.get('http://toptovarbot/ajax_bot_tovar/contacts.php', {
             params: {
               link: value
             }
         })
         .then(response => {
-          console.log(response);
-          response.data.reduce((acc, item) => {
-            const existingItem = acc.find(x => x.user_id === item.user_id);
-            if (existingItem) {
-                existingItem.contacts[item.contacts_type].push(item.contacts);
-            } else {
-                acc.push({
-                    user_id: item.user_id,
-                    contacts: {
-                        [item.contacts_type]: [item.contacts]
-                    }
-                });
+          const contacts = Object.values(response.data).filter(item => item.user_id && item.contacts).reduce((acc, item) => {
+            if (!acc[item.user_id]) {
+                acc[item.user_id] = { contacts: {} };
             }
-            this.catalog = acc;
+            if (!acc[item.user_id].contacts[item.contacts_type]) {
+                acc[item.user_id].contacts[item.contacts_type] = [];
+            }
+            acc[item.user_id].contacts[item.contacts_type].push(item.contacts);
             return acc;
-      }, []);
+        }, {});
+
+        // Группируем локации по user_id
+        const locations = response.data.location.reduce((acc, location) => {
+            if (!acc[location.user_id]) {
+                acc[location.user_id] = { locations: [] };
+            }
+            // Формируем строку адреса
+            const address = `${location.name_of_place}, ${location.building}, ${location.floar}, ${location.line}, ${location.place}`;
+            acc[location.user_id].locations = ({
+                address: address.trim().replace(/, +$/, ''), // Убираем лишнюю запятую, если она есть
+                photo: location.photo
+            });
+            return acc;
+        }, {});
+
+        // Объединяем контакты и локации по user_id
+        const result = Object.keys(contacts).reduce((acc, userId) => {
+            acc[userId] = {
+                contacts: contacts[userId].contacts || {},
+                locations: locations[userId]?.locations || []
+            };
+            return acc;
+        }, {});
+        this.catalog = Object.values(result);
       })
       .catch(error => {
           console.error(error);

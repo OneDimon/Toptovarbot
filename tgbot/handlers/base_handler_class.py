@@ -13,9 +13,10 @@ class Base_hanler:
     async def mssage_answer(event : types.CallbackQuery|types.Message|types.BotCommand, 
                             text : str, reply_markup: types.InlineKeyboardMarkup = None):
         if type(event) == types.CallbackQuery:
-            await event.message.answer(text, reply_markup=reply_markup)
+            message_id = await event.message.answer(text, reply_markup=reply_markup)
         else:
-            await event.answer(text, reply_markup=reply_markup)
+            message_id = await event.answer(text, reply_markup=reply_markup)
+        return message_id.message_id
 
     @staticmethod
     async def update_data_state(event : types.CallbackQuery|types.Message|types.BotCommand, 
@@ -80,6 +81,10 @@ class Steps_base (Base_hanler, steps_interface):
         await self._after_start_of_step(call, state)
 
     async def get_answer(self, call : types.CallbackQuery|types.Message, state : FSMContext):
+        stop_func = await self._check_by_message(call, state)
+        if stop_func == True:
+            await self.mssage_answer(call, 'Используйте кнопку у последнего сообщения или вернитесь в меню и попробуйте снова.')
+            return
         stop_func = await self._before_get_answer(call, state)
         if stop_func == True:
             return
@@ -103,7 +108,11 @@ class Steps_base (Base_hanler, steps_interface):
     async def _send_a_question(self, call : types.CallbackQuery|types.Message, state : FSMContext):
         builder = await self._get_builder_inline_keyboard_for_question(call, state)
         text = await self._get_text_for_question(call, state)
-        await Base_hanler.mssage_answer(call, text, builder.as_markup())
+        message_id = await Base_hanler.mssage_answer(call, text, builder.as_markup())
+        data_state = await state.get_data()
+        data_state[self.key_data_in_state+'_message_id'] = message_id
+        await state.update_data(data_state)
+
 
     async def _save_answer_data(self, call : types.CallbackQuery|types.Message, state : FSMContext):
         await Base_hanler.update_data_state(call, state, f'{self.module}_{self.name}')
@@ -121,6 +130,14 @@ class Steps_base (Base_hanler, steps_interface):
     async def _get_text_for_question(self, call : types.CallbackQuery|types.Message, state : FSMContext) -> str:
         return "Ваш вопрос?"
     
+    async def _check_by_message(self, call : types.CallbackQuery|types.Message, state : FSMContext):
+        if type(call) == types.Message or type(call) == types.BotCommand:
+            return False
+        data_state = await state.get_data()
+        if data_state[self.key_data_in_state+'_message_id'] != call.message.message_id:
+            return True
+        return False
+
     async def _before_start_of_step(self, call : types.CallbackQuery, state : FSMContext):
         pass
 

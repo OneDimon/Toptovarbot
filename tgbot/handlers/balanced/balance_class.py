@@ -67,10 +67,10 @@ class Balance_top_up (Steps_base):
     async def _go_to_next_step(self, call: types.CallbackQuery | types.Message, state: FSMContext):
         if type(call) == types.Message:
             if call.text.isdigit():
-                await call.answer('пополнение прошло успешно')
+                await self.mssage_answer(call, 'пополнение прошло успешно')
                 await Balance_menu().start_of_step(call, state)
                 return
-        await call.answer('введите число')
+        await self.mssage_answer(call, 'введите число')
         
 
 class Ball_menu (Base_hanler):
@@ -83,5 +83,5 @@ class Ball_menu (Base_hanler):
         builder = InlineKeyboardBuilder()
         builder.row(types.InlineKeyboardButton(text="в главное меню", callback_data="main_menu"))
         builder.row(types.InlineKeyboardButton(text="вернуться к балансу", callback_data="balance_menu"))
-        await call.message.answer(text, reply_markup=builder.as_markup())
+        await self.mssage_answer(call, text, builder)
 

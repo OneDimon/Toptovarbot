@@ -4,3 +4,4 @@ test.py
 .vs
 .venv
 __pycache__
+/img/

@@ -48,7 +48,7 @@ class User (Base_hanler):
         await User.__response_main_menu(start)
 
     @staticmethod
-    async def seller(seller : types.CallbackQuery, state : FSMContext):
+    async def seller(seller : types.CallbackQuery|types.Message, state : FSMContext):
         from handlers.contacts import contacts_class
         from handlers.organization import organization_class
         await state.clear()
@@ -66,7 +66,7 @@ class User (Base_hanler):
             return
         else:
             keyboard = await User.__get_seller_menu()
-            await seller.message.answer("Вы вошли как Продавец!", reply_markup=keyboard)
+            await User.mssage_answer(seller, "Вы вошли как Продавец!", keyboard)
             return
 
     @staticmethod
@@ -77,7 +77,7 @@ class User (Base_hanler):
             await User.get_city_states(call, state)
         else:
             buyer_keyboard = await User.__get_buyer_menu()
-            await call.message.answer("Вы вошли как Покупатель!", reply_markup=buyer_keyboard)
+            await User.mssage_answer(call, "Вы вошли как Покупатель!", buyer_keyboard)
 
     @staticmethod
     async def profile(call : types.CallbackQuery, state : FSMContext):
@@ -88,19 +88,19 @@ class User (Base_hanler):
         Location_data = await Location.get_location(call.from_user.id)    
         text_profile = await User.__get_text_profile(userData, contacts_all, Location_data[0])   
         inline_builder = await User.__get_inline_keyboard_profile()        
-        await call.message.answer(text_profile, reply_markup=inline_builder)
+        await User.mssage_answer(call, text_profile, inline_builder)
 
     @staticmethod
     async def get_city_states(call : types.CallbackQuery, state : FSMContext):
         await state.set_state(StateUser.register_buyer_get_city)
-        await call.message.answer("Из какого вы города?")
+        await User.mssage_answer(call, "Из какого вы города?")
 
     @staticmethod
     async def get_city_confirm(call : types.CallbackQuery, state : FSMContext):
         data_state = await state.get_data()
         await DB_users.set_user_city(call.from_user.id, data_state["city"])
         buyer_keyboard = await User.__get_buyer_menu()
-        await call.message.answer("Вы вошли как Покупатель!", reply_markup=buyer_keyboard)
+        await User.mssage_answer(call, "Вы вошли как Покупатель!", buyer_keyboard)
 
     @staticmethod
     async def set_user_city(message : types.Message, state : FSMContext):
@@ -114,7 +114,7 @@ class User (Base_hanler):
             text="назад", callback_data="get_city_cancel")
         )
         state_data = await state.get_data()
-        await message.answer("Вы из города " + state_data["city"] + "?", reply_markup=builder.as_markup())
+        await User.mssage_answer(message, "Вы из города " + state_data["city"] + "?", builder.as_markup())
     
     @staticmethod
     async def confirm_offerta(call : types.CallbackQuery, state : FSMContext):
@@ -124,7 +124,7 @@ class User (Base_hanler):
     @staticmethod
     async def set_t_phone(message : types.Message, state : FSMContext):
         await DB_users.set_t_phone(message.from_user.id, message.contact.phone_number)
-        await message.answer("Ваш контакт добавлен", reply_markup=types.ReplyKeyboardRemove())
+        await User.mssage_answer(message, "Ваш контакт добавлен", reply_markup=types.ReplyKeyboardRemove())
         await User.start(message, state)
 
     @staticmethod
@@ -182,7 +182,7 @@ class User (Base_hanler):
         builder.row(types.InlineKeyboardButton(
             text='В главное меню', callback_data='main_menu')
         )
-        await call.message.answer(text, reply_markup=builder.as_markup())
+        await User.mssage_answer(call, text, builder.as_markup())
 
     @staticmethod
     async def _if_subscribshed(user_id : int):
@@ -230,11 +230,7 @@ class User (Base_hanler):
             [types.KeyboardButton(text="Назад")]
         ]
         markup = types.ReplyKeyboardMarkup(keyboard=keyboard, resize_keyboard=True)
-
-        if type(start) == types.CallbackQuery:
-            await start.message.answer(text, reply_markup=markup)
-        else:
-            await start.answer(text, reply_markup=markup)
+        await User.mssage_answer(start, text, markup)
             
     @staticmethod
     async def __response_main_menu(start : types.Message|types.CallbackQuery):
@@ -245,12 +241,9 @@ class User (Base_hanler):
         builder.row(types.InlineKeyboardButton(
             text="Покупатель", callback_data="buyer")
         )
+        await User.mssage_answer(start, "Вы вошли как <b>Продавец</b> или <b>Покупатель</b>?", builder.as_markup())
 
-        if type(start) == types.CallbackQuery:
-            await start.message.answer("Вы <b>Продавец</b> или <b>Покупатель</b>?", reply_markup=builder.as_markup())
-        else:
-            await start.answer("Вы <b>Продавец</b> или <b>Покупатель</b>?", reply_markup=builder.as_markup())
-   
+
     @staticmethod
     async def __get_seller_menu():
         builder = InlineKeyboardBuilder()
@@ -388,6 +381,7 @@ class User (Base_hanler):
 
     @staticmethod
     async def __get_bot_command(bot: Bot):
+        return
         commands = [
             BotCommand(
                 command='start',

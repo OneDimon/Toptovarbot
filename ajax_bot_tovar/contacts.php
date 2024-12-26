@@ -21,9 +21,11 @@ if (pg_num_rows($result) > 0) {
     foreach ($arIdSeller as $idSeller) {
         $result_contact = pg_query_params($db, "SELECT * FROM contacts WHERE user_id = $1 AND LOWER(contacts_type) != 'phone'", [$idSeller]);
         while ($row_contact = pg_fetch_assoc($result_contact)) {
-            $row[] = $row_contact;
+            $data[] = $row_contact;
         }
-        $data = $row;
+        $result_location = pg_query_params($db, "SELECT * FROM location WHERE user_id = $1", [(int) $idSeller]);
+        $contract = pg_fetch_assoc($result_location);
+        $data['location'][] = $contract;
     }
     header('Content-Type: application/json');
     echo json_encode($data);
