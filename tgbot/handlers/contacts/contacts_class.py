@@ -55,6 +55,7 @@ class Contacts (Base_hanler):
     async def __get_contacts_menu_text(call: types.CallbackQuery, state: FSMContext):
         data_state = await state.get_data()
         all_contacts = data_state['all_contacts']
+        text = 'Добавьте ваши контакты. \n  Для продолжения использования функционала продавца необходимо добавить хотя бы 1 контакт. \n'
         telegram = ''
         whatsapp_link = ''
         admin_vk_link = ''
@@ -70,7 +71,7 @@ class Contacts (Base_hanler):
             for contact_phone in all_contacts['admin_vk_link']:
                 admin_vk_link += ' ' + contact_phone['contact']
 
-        return f"Телеграм: {telegram} \n WhatsAppLink: {whatsapp_link} \n ссылка на админ страницу вк: {admin_vk_link}"
+        return f"{text} Телеграм: {telegram} \n WhatsAppLink: {whatsapp_link} \n ссылка на админ страницу вк: {admin_vk_link}"
     
     @staticmethod
     async def back_contacts(call : types.CallbackQuery, state : FSMContext):
