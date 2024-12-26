@@ -204,7 +204,7 @@ class User (Base_hanler):
                 referer_id = 1
             else:
                 referer_id = 641074145
-        referral_link = LINK_BOT + "?start=" + str(referer_id)
+        referral_link = LINK_BOT + "?start=" + str(start.from_user.id)
         await DB_users.add_user(start.from_user.id, start.from_user.full_name)
         await DB_referral.add_referral(start.from_user.id, referral_link, referer_id)
         await User.start(start, state)
