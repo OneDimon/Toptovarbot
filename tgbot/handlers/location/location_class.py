@@ -435,9 +435,11 @@ class location_description(Steps_base):
         data_state = await state.get_data()
         if 'location_photo' in data_state and data_state['location_photo']:
             photo = FSInputFile(data_state['location_photo'])
-            await call.bot.send_photo(call.from_user.id, photo, caption=text, reply_markup=builder.as_markup())
+            message = await call.bot.send_photo(call.from_user.id, photo, caption=text, reply_markup=builder.as_markup())
+            message_id = message.message_id
         else:
-            await Base_hanler.mssage_answer(call, text, builder.as_markup())
+            message_id = await Base_hanler.mssage_answer(call, text, builder.as_markup())
+        return message_id
     
     async def _get_text_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> str:
         data_state = await state.get_data()

@@ -77,7 +77,8 @@ class Steps_base (Base_hanler, steps_interface):
         await state.set_state(new_state)
 
         await self._save_step_in_state(call, state)
-        await self._send_a_question(call, state)
+        message_id = await self._send_a_question(call, state)
+        await self._save_message_id(message_id, call, state)
         await self._after_start_of_step(call, state)
 
     async def get_answer(self, call : types.CallbackQuery|types.Message, state : FSMContext):
@@ -109,10 +110,12 @@ class Steps_base (Base_hanler, steps_interface):
         builder = await self._get_builder_inline_keyboard_for_question(call, state)
         text = await self._get_text_for_question(call, state)
         message_id = await Base_hanler.mssage_answer(call, text, builder.as_markup())
+        return message_id
+    
+    async def _save_message_id(self, message_id, call : types.CallbackQuery|types.Message, state : FSMContext):
         data_state = await state.get_data()
         data_state[self.key_data_in_state+'_message_id'] = message_id
         await state.update_data(data_state)
-
 
     async def _save_answer_data(self, call : types.CallbackQuery|types.Message, state : FSMContext):
         await Base_hanler.update_data_state(call, state, f'{self.module}_{self.name}')
