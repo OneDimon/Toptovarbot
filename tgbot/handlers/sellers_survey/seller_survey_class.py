@@ -167,8 +167,8 @@ class seller_survey_photo(Steps_base):
        data_state = await state.get_data()
        if 'seller_survey_photo_id' not in data_state:
            return
-       await call.bot.download(data_state['seller_survey_photo_id'], F"{os.getcwd()}/tgbot/img/{data_state['seller_survey_photo_id']}.jpg")
-       data_state[self.key_data_in_state] = F"{os.getcwd()}/tgbot/img/{data_state['seller_survey_photo_id']}.jpg"
+       await call.bot.download(data_state['seller_survey_photo_id'], F"img/{data_state['seller_survey_photo_id']}.jpg")
+       data_state[self.key_data_in_state] = F"img/{data_state['seller_survey_photo_id']}.jpg"
        await state.update_data(data_state)
     
     async def _get_text_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> str:
