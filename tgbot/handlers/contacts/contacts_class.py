@@ -45,7 +45,7 @@ class Contacts (Base_hanler):
     async def __get_contacts_menu_keyboard(call: types.CallbackQuery, state: FSMContext):
         builder = InlineKeyboardBuilder()
         builder.row(types.InlineKeyboardButton(text="отредактировать/добавить ссылку на Telegram", callback_data="contacts_telegram"))
-        builder.row(types.InlineKeyboardButton(text="отредактировать/добавить WhatsAppPhone", callback_data="contacts_whatsapp_phone"))
+        builder.row(types.InlineKeyboardButton(text="отредактировать/добавить WhatsAppPhone", callback_data="contacts_whatsapp_link"))
         builder.row(types.InlineKeyboardButton(text="отредактировать/добавить ссылку на админ страницу вк", callback_data="contacts_admin_vk_link"))
         builder.row(types.InlineKeyboardButton(text="Завершить добавление/редактирование", callback_data="seller"))
         return builder.as_markup()

@@ -91,9 +91,8 @@ class Steps_base (Base_hanler, steps_interface):
             return
         
         await self._save_answer_data(call, state)
-        await self._go_to_next_step(call, state)
-
         await self._after_get_answer(call, state)
+        await self._go_to_next_step(call, state)
 
     async def _save_step_in_state(self, call : types.CallbackQuery|types.Message, state : FSMContext):
         data_state = await state.get_data()
