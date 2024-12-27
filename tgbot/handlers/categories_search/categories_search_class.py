@@ -63,7 +63,7 @@ class categories_search_category_one_level (Steps_base):
         builder.row(types.InlineKeyboardButton(text="Назад", callback_data="buyer"))
         unique_categories = list(set(subarray[1] for subarray in data_state['all_categories']))
         for category in unique_categories:
-            if 64 > len(category.encode('utf-8')):
+            if 50 > len(category.encode('utf-8')):
                 builder.row(types.InlineKeyboardButton(text=category, callback_data=category))
         return builder
     
@@ -86,7 +86,7 @@ class categories_search_category_two_level (Steps_base):
         builder.row(types.InlineKeyboardButton(text="Назад", callback_data="buyer"))
         unique_categories = list(set(subarray[2] for subarray in data_state['all_categories'] if subarray[1] == data_state['categories_search_category_one_level']))
         for category in unique_categories:
-            if 64 > len(category.encode('utf-8')):
+            if 50 > len(category.encode('utf-8')):
                 builder.row(types.InlineKeyboardButton(text=category, callback_data=category))
         return builder
     
@@ -109,7 +109,7 @@ class categories_search_category_three_level (Steps_base):
         builder.row(types.InlineKeyboardButton(text="Назад", callback_data="back_categories_search"))
         unique_categories = list(set(subarray[3] for subarray in data_state['all_categories'] if subarray[2] == data_state['categories_search_category_two_level']))
         for category in unique_categories:
-            if 64 > len(category.encode('utf-8')):
+            if 50 > len(category.encode('utf-8')):
                 builder.row(types.InlineKeyboardButton(text=category, callback_data=category))
         return builder
     
