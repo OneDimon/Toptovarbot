@@ -9,3 +9,4 @@ organization_router = Router()
 
 organization_router.callback_query.register(organization_class.Organization().start_of_step, lambda c: c.data == 'organization')
 organization_router.callback_query.register(organization_class.Organization().get_answer, StateOrganization.organization)
+organization_router.message.register(organization_class.Organization().get_answer, StateOrganization.organization)
