@@ -64,7 +64,7 @@ class Categories_product_database(base.Base_database):
 
     @staticmethod
     async def set_result_search(user_id: int, category_three: str, result: str, hash: str) -> None:
-        query = f"""INSERT INTO categories_search (CATEGORY, DATETIME, USER_ID, RESULT, LINK) VALUES ('{category_three}', '{datetime.now()}', {user_id}, '{result}', '{hash}')"""
+        query = f"""INSERT INTO categories_search (CATEGORY, DATETIME, USER_ID, RESULT, LINK) VALUES ('{category_three.title()}', '{datetime.now()}', {user_id}, '{result}', '{hash}')"""
         await Categories_product_database.query_database(Categories_product_database(), query)
 
     @staticmethod

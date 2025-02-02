@@ -1,0 +1,77 @@
+from aiogram import types
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.fsm.context import FSMContext
+from handlers.base_handler_class import Steps_base
+from config_data.config import *
+from aiogram.types import InlineQueryResultArticle, InputTextMessageContent
+from modules.search_categories_module import Search_categories_modules
+
+class Categories_inline (Steps_base):
+    def __init__(self):
+        name = 'categories_inline'
+        module = 'seller_survey'
+        super().__init__(name, module)
+    
+    async def _get_text_for_question(self, call: types.CallbackQuery | types.Message, state: FSMContext) -> str:
+        return 'Введите @OptTovarBot + ваша категория категория и выберите из предложенных вариантов либо нажмите на кнопку и введите категорию'
+    
+    async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery | types.Message, state: FSMContext) -> InlineKeyboardBuilder:
+        builder = InlineKeyboardBuilder()
+        builder.row(types.InlineKeyboardButton(text="Упомянуть бота", switch_inline_query_current_chat=""))
+        return builder
+
+    
+    async def get_answer(self, mess: types.InlineQuery|types.Message, state: FSMContext):
+        if type(mess) == types.InlineQuery:
+            await self._process_inline_query(mess)
+        elif type(mess) == types.Message:
+            await self._process_message(mess, state)
+
+
+    async def _process_inline_query(self, inline: types.InlineQuery):
+        query_text = inline.query
+        categories = await Search_categories_modules().search_categories(query_text)
+        results = []
+        for categorie in categories:
+            results.append(
+                InlineQueryResultArticle(
+                    id=str(categorie[4]),
+                    title=categorie[3],
+                    input_message_content=InputTextMessageContent(
+                        message_text=f"Вы выбрали категорию: {categorie[1] + '->' + categorie[2] + '->' + categorie[3]}", parse_mode="HTML"
+                    ),
+                    description=f"{categorie[1] + '->' + categorie[2] + '->' + categorie[3]}",
+                )
+            )
+        if len(results) == 0:
+            results.append(
+                InlineQueryResultArticle(
+                    id=str('not_found'),
+                    title="Ничего не найдено",
+                    input_message_content=InputTextMessageContent(
+                        message_text="Ничего не найдено"
+                    ),
+                    description="Ничего не найдено"
+                )
+            )
+        await inline.bot.answer_inline_query(inline.id, results=results, cache_time=1)
+
+    async def _process_message(self, message: types.Message, state: FSMContext):
+        import re
+        pattern = re.compile(r"^Вы выбрали категорию: ([^->]+)->([^->]+)->([^->]+)$", re.UNICODE)
+        match = pattern.match(message.text)
+        data_state = await state.get_data()
+        
+        if match:
+            data_state['seller_survey_category_one_level'], data_state['seller_survey_category_two_level'], data_state['seller_survey_category_three_level'] = [match.group(1).strip().lower(), match.group(2).strip().lower(), match.group(3).strip().lower()]
+            await state.update_data(data_state)
+            await self._go_to_next_step(message, state)
+        else:
+            await message.answer("Ошибка: строка не соответствует ожидаемому формату")
+            await self.start_of_step(message, state)
+
+    async def _go_to_next_step(self, message: types.Message, state: FSMContext): 
+        from . import Confirm_category
+        await Confirm_category().start_of_step(message, state)
+
+

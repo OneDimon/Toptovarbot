@@ -33,9 +33,7 @@ class organization(StatesGroup):
 class publication_product(StatesGroup):
     name = State()
     description = State()
-    category_one_level = State()
-    category_two_level = State()
-    category_three_level = State()
+    categories_inline = State()
     price = State()
     photo = State()
 
@@ -44,11 +42,10 @@ class categories_search(StatesGroup):
     category_two_level = State()
     category_three_level = State()
     confirm = State()
+    inline = State()
 
 class seller_survey(StatesGroup):
-    category_one_level = State()
-    category_two_level = State()
-    category_three_level = State()
+    categories_inline = State()
     confirm_category = State()
     photo = State()
     name_product = State()
