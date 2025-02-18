@@ -24,7 +24,7 @@ class Referral_program (Base_hanler):
         table_text += "ваш групповый объем в этом месяце: " + (str(data_user_ref_program[0][5]) if data_user_ref_program[0][5] != None else '0') + "\n"
         table_text += "ваш общий объем в этом месяце: " + (str(data_user_ref_program[0][6]) if data_user_ref_program[0][6] != None else '0') + "\n"
         table_text += "ваш потенциальнйы статус по показателям прошедшего месяца: " + (data_user_ref_program[0][10] if data_user_ref_program[0][10] != None else 'Не присвоен') + "\n"
-        link = 'http://tovartest.ru/referral/?user_id=' + call.from_user.id
+        link = 'http://tovartest.ru/referral/?user_id=' + str (call.from_user.id)
         builder = InlineKeyboardBuilder()
         builder.row(types.InlineKeyboardButton(text="📝 Оформить подписку", callback_data="subscription_menu"))
         builder.row(types.InlineKeyboardButton(text="📊 Посмотреть таблицу рефералов", url=link))
