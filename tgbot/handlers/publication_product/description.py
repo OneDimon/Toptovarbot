@@ -16,7 +16,7 @@ class Description (Steps_base):
     
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery | types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text="Назад", callback_data="back_publication_product"))
+        builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="back_publication_product"))
         return builder
     
     async def _go_to_next_step(self, message: types.Message, state: FSMContext):

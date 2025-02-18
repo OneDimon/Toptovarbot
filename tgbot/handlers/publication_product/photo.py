@@ -18,7 +18,7 @@ class Photo (Steps_base):
     
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery | types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text="Назад", callback_data="back_publication_product"))
+        builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="back_publication_product"))
         return builder
     
     async def _before_get_answer(self, call: types.Message, state: FSMContext):
@@ -51,8 +51,18 @@ class Photo (Steps_base):
         await self.__publish_product_for_chanel(call, state)
 
     async def __response_finish(self, call: types.Message, state: FSMContext):
-        text = "Ваше объявление опубликовано"
-        await self.mssage_answer(call, text)
+        text = await self.__get_respronse_finish_text() 
+        keyboard = await self.__get_inline_keyboard_for_finish(call, state)
+        await self.mssage_answer(call, text, keyboard)
+
+    async def __get_respronse_finish_text(self):
+        return "Ваше объявление опубликовано"
+    
+    async def __get_inline_keyboard_for_finish(self, call: types.Message, state: FSMContext):
+        builder = InlineKeyboardBuilder()
+        builder.row(types.InlineKeyboardButton(text="❌ на сегодня все", callback_data="main_menu"))
+        builder.row(types.InlineKeyboardButton(text="📝 опубликовать еще", callback_data="publication_product"))
+        return builder.as_markup()
 
     async def __save_product(self, call: types.Message, state: FSMContext):
         data_state = await state.get_data()
@@ -70,6 +80,6 @@ class Photo (Steps_base):
         text = f"{data_state['publication_product_name']}\n {data_state['publication_product_description']} \n цена:  {data_state['publication_product_price']}"
         photo = FSInputFile(data_state['publication_product_photo'])
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text="В бота", url=LINK_BOT))
+        builder.row(types.InlineKeyboardButton(text="🤖 В бота", url=LINK_BOT))
         await call.bot.send_photo(CHANNEL, photo, caption=text , reply_markup=builder.as_markup())
               

@@ -21,12 +21,8 @@ class Name_product(Steps_base):
         builder = InlineKeyboardBuilder()
         data_state = await state.get_data()
         if self.key_data_in_state in data_state and data_state[self.key_data_in_state]:
-            builder.row(types.InlineKeyboardButton(
-                text="Оставить текущее", callback_data="current")
-            )
-        builder.row(types.InlineKeyboardButton(
-            text="Назад", callback_data="back_seller_survey")
-        )
+            builder.row(types.InlineKeyboardButton(text="💾 Оставить текущее", callback_data="current"))
+        builder.row(types.InlineKeyboardButton(text="🔙 Назад", callback_data="back_seller_survey"))
         return builder
 
     async def _go_to_next_step(self, call: types.CallbackQuery, state: FSMContext):

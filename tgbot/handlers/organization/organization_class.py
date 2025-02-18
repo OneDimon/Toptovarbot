@@ -38,10 +38,10 @@ class Organization (Steps_base):
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery | types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         state_data = await state.get_data()
         builder = InlineKeyboardBuilder()
-        if self.key_data_in_state in state_data and state_data[self.key_data_in_state]:
-            builder.row(types.InlineKeyboardButton(text="Оставить текущее", callback_data="current"))
+        if self.key_data_in_state in state_data and state_data[self.key_data_in_state]: 
+            builder.row(types.InlineKeyboardButton(text="💾 Оставить текущее", callback_data="current"))
         else: 
-            builder.row(types.InlineKeyboardButton(text="Пропустить", callback_data="skip"))
+            builder.row(types.InlineKeyboardButton(text="⏭️ Пропустить", callback_data="skip"))
         return builder
     
     async def _after_get_answer(self, call: types.CallbackQuery | types.Message, state: FSMContext):

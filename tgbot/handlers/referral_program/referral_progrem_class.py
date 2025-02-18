@@ -24,10 +24,11 @@ class Referral_program (Base_hanler):
         table_text += "ваш групповый объем в этом месяце: " + (str(data_user_ref_program[0][5]) if data_user_ref_program[0][5] != None else '0') + "\n"
         table_text += "ваш общий объем в этом месяце: " + (str(data_user_ref_program[0][6]) if data_user_ref_program[0][6] != None else '0') + "\n"
         table_text += "ваш потенциальнйы статус по показателям прошедшего месяца: " + (data_user_ref_program[0][10] if data_user_ref_program[0][10] != None else 'Не присвоен') + "\n"
+        link = 'http://tovartest.ru/referral/?user_id=' + call.from_user.id
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text="оформить подписку", callback_data="subscription_menu"))
-        builder.row(types.InlineKeyboardButton(text="посмотреть таблицу рефералов", callback_data="referral_table"))
-        builder.row(types.InlineKeyboardButton(text="в главное меню", callback_data="main_menu"))
+        builder.row(types.InlineKeyboardButton(text="📝 Оформить подписку", callback_data="subscription_menu"))
+        builder.row(types.InlineKeyboardButton(text="📊 Посмотреть таблицу рефералов", url=link))
+        builder.row(types.InlineKeyboardButton(text="🏠 В главное меню", callback_data="main_menu"))
         await self.mssage_answer(call, table_text, builder.as_markup())
 
     async def generate_referral_table(referrals):
@@ -118,12 +119,11 @@ class Subscription (Base_hanler):
         data_user_ref_program = await DB_referral.get_data_user_ref_program(call.from_user.id)
         price_subscription = await self.get_price_subscription(data_user_ref_program[0][7])
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text=f"продолжить пользоваться без подписки", callback_data="main_menu"))
-        builder.row(types.InlineKeyboardButton(text=f"купить месячную подписку за {price_subscription} баллов", callback_data="buy_subscription_month"))
-        builder.row(types.InlineKeyboardButton(text="купить подписку на 1 день", callback_data="buy_subscription_1_day"))
-        builder.row(types.InlineKeyboardButton(text="перейти к пополнению баланса", callback_data="balance_menu"))
-        builder.row(types.InlineKeyboardButton(text="в главное меню", callback_data="main_menu"))
-
+        builder.row(types.InlineKeyboardButton(text="⏩ Продолжить пользоваться без подписки", callback_data="main_menu"))
+        builder.row(types.InlineKeyboardButton(text=f"💳 Купить месячную подписку за {price_subscription} баллов", callback_data="buy_subscription_month"))
+        builder.row(types.InlineKeyboardButton(text="🗓️ Купить подписку на 1 день", callback_data="buy_subscription_1_day"))
+        builder.row(types.InlineKeyboardButton(text="💰 Перейти к пополнению баланса", callback_data="balance_menu"))
+        builder.row(types.InlineKeyboardButton(text="🏠 В главное меню", callback_data="main_menu"))
         text = 'ваш баланс: ' + str(data_user_ref_program[0][9] if data_user_ref_program[0][9] != None else 0) + ' баллов\n'
         text += 'подписка даст вам: \n'
         text += '1. неограниченное количество публикаций в канале\n'
@@ -148,12 +148,15 @@ class Subscription (Base_hanler):
         data_user_ref_program = await DB_referral.get_data_user_ref_program(call.from_user.id)
         user = await User._search_user(call.from_user.id)
         if_subscription = await User._if_subscribshed(call.from_user.id)
+
         if(if_subscription):
             await self.mssage_answer(call, "Вы уже оформили подписку!", None)
+
         elif((data_user_ref_program[0][9] if data_user_ref_program[0][9] != None else 0) < price_subscription):
             builder = InlineKeyboardBuilder()
             builder.row(types.InlineKeyboardButton(text="перейти к пополнению баланса", callback_data="balance_menu"))
             await self.mssage_answer(call, "Недостаточно баллов для покупки подписки!", builder.as_markup())
+
         else:
             await Referral_program().buy_subscription(call.from_user.id, price_subscription)
             if type_subscription == 'month':
@@ -161,7 +164,7 @@ class Subscription (Base_hanler):
             if type_subscription == 'day':
                 await User._add_subscribtion(call.from_user.id, datetime.now() + relativedelta(days=1))
             builder = InlineKeyboardBuilder()
-            builder.row(types.InlineKeyboardButton(text="в главное меню", callback_data="main_menu"))
+            builder.row(types.InlineKeyboardButton(text="🏠 В главное меню", callback_data="main_menu"))
             await self.mssage_answer(call, "Подписка оформлена!", builder.as_markup())
             await Subscription().subscription_menu(call, state)
     

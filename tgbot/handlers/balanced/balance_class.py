@@ -29,9 +29,9 @@ class Balance_menu (Steps_base):
     
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery | types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text="в главное меню", callback_data="main_menu"))
-        builder.row(types.InlineKeyboardButton(text="пополнить баланс", callback_data="top_up_balance"))
-        builder.row(types.InlineKeyboardButton(text="что такое баллы", callback_data="ball_menu"))
+        builder.row(types.InlineKeyboardButton(text="🏠 В главное меню", callback_data="main_menu"))
+        builder.row(types.InlineKeyboardButton(text="💰 Пополнить баланс", callback_data="top_up_balance"))
+        builder.row(types.InlineKeyboardButton(text="❓ Что такое баллы", callback_data="ball_menu"))
         return builder
     
     async def _go_to_next_step(self, call: types.CallbackQuery | types.Message, state: FSMContext):
@@ -50,7 +50,7 @@ class Balance_top_up (Steps_base):
     
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery | types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text="в главное меню", callback_data="main_menu"))
+        builder.row(types.InlineKeyboardButton(text="🏠 В главное меню", callback_data="main_menu"))
         return builder
     
     async def _save_answer_data(self, call: types.CallbackQuery | types.Message, state: FSMContext):
@@ -81,7 +81,7 @@ class Ball_menu (Base_hanler):
         text += "курс баллов: \n"
         text += "1 балл = 200 рублей \n"
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text="в главное меню", callback_data="main_menu"))
-        builder.row(types.InlineKeyboardButton(text="вернуться к балансу", callback_data="balance_menu"))
+        builder.row(types.InlineKeyboardButton(text="🏠 В главное меню", callback_data="main_menu"))
+        builder.row(types.InlineKeyboardButton(text="🔙 Вернуться к балансу", callback_data="balance_menu"))
         await self.mssage_answer(call, text, builder)
 

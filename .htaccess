@@ -11,6 +11,10 @@ AddDefaultCharset utf-8
 
 <ifModule mod_rewrite.c>
     RewriteEngine On
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(contact|catalog|referral)/?$ /vue_site/dist/index.html [L]
     
     # Uncomment the following line, if you are having trouble
     #RewriteBase /
@@ -38,6 +42,12 @@ AddDefaultCharset utf-8
     RewriteBase /
     RewriteRule ^dist/css/(.*)$ dist/css/$1 [L]
     RewriteRule ^dist/js/(.*)$ dist/js/$1 [L]
+
+    RewriteEngine On
+
+    # Перенаправляем все запросы, кроме существующих файлов и папок, на index.html
+
+
 </ifModule>
 
 <ifModule mod_headers.c>

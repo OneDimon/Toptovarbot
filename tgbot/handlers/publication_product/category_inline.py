@@ -13,11 +13,11 @@ class Categories_inline (Steps_base):
         super().__init__(name, module)
     
     async def _get_text_for_question(self, call: types.CallbackQuery | types.Message, state: FSMContext) -> str:
-        return 'Введите @OptTovarBot + ваша категория категория и выберите из предложенных вариантов либо нажмите на кнопку и введите категорию'
+        return 'Нажмите кнопку "начать поиск" и введите название товара или категорию.'
     
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery | types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text="Упомянуть бота", switch_inline_query_current_chat=""))
+        builder.row(types.InlineKeyboardButton(text="🔍 Начать поиск", switch_inline_query_current_chat=""))
         return builder
 
     

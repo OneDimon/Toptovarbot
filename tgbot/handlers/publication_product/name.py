@@ -23,7 +23,7 @@ class Name (Steps_base):
         if not await User._if_subscribshed(call.from_user.id):
             product = await DB_product.get_product_by_user_and_date(call.from_user.id, call.message.date)
             if product:
-                await self.mssage_answer(call, 'Вы уже публиковали свое объявнление сегодня! Оплатите подписку или приходите завтра.')
+                await self.mssage_answer(call, 'Вы уже публиковали свой товар сегодня! Оплатите подписку или приходите завтра.')
                 await User.seller(call, state)
                 return False
         return True
@@ -49,7 +49,7 @@ class Name (Steps_base):
     
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery | types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text="Отмена", callback_data="seller"))
+        builder.row(types.InlineKeyboardButton(text="❌ Отмена", callback_data="seller"))
         return builder
     
     async def _go_to_next_step(self, message: types.Message, state: FSMContext):

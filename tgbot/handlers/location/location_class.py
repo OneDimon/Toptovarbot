@@ -66,29 +66,15 @@ class Location_name(Steps_base):
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(
-            text="р-к Садовод", callback_data="р-к Садовод")
-        )
-        builder.row(types.InlineKeyboardButton(
-            text="ТЯК Москва", callback_data="ТЯК Москва")
-        )
-        builder.row(types.InlineKeyboardButton(
-            text="р-к Южные Ворота", callback_data="р-к Южные ворота")
-        )
-        builder.row(types.InlineKeyboardButton(
-            text="Свой вариант", callback_data="Свой вариант")
-        )
-        builder.row(types.InlineKeyboardButton(
-            text="Поставщик из Китая", callback_data="Поставщие из китая")
-        )
+        builder.row(types.InlineKeyboardButton(text="🛒 р-к Садовод", callback_data="р-к Садовод"))
+        builder.row(types.InlineKeyboardButton(text="🏙️ ТЯК Москва", callback_data="ТЯК Москва"))
+        builder.row(types.InlineKeyboardButton(text="🚪 р-к Южные Ворота", callback_data="р-к Южные ворота"))
+        builder.row(types.InlineKeyboardButton(text="✍️ Свой вариант", callback_data="Свой вариант"))
+        builder.row(types.InlineKeyboardButton(text="🇨🇳 Поставщик из Китая", callback_data="Поставщики из Китая"))
         data_state = await state.get_data()
         if self.key_data_in_state in data_state and data_state[self.key_data_in_state]:
-            builder.row(types.InlineKeyboardButton(
-                text="Оставить текущее", callback_data="current")
-            )
-        builder.row(types.InlineKeyboardButton(
-            text="Назад", callback_data="main_menu") 
-        )
+            builder.row(types.InlineKeyboardButton(text="💾 Оставить текущее", callback_data="current"))
+        builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="main_menu") )
         return builder
     
     async def _go_to_next_step(self, call: types.CallbackQuery, state: FSMContext):
@@ -123,23 +109,13 @@ class Location_sector(Steps_base):
     
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(
-            text="Крытый вещевой рынок", callback_data="Крытый вещевой рынок")
-        )
-        builder.row(types.InlineKeyboardButton(
-            text="Торговый комплекс", callback_data="Торговый комплекс")
-        )
-        builder.row(types.InlineKeyboardButton(
-            text="Строение", callback_data="Строение")
-        )
+        builder.row(types.InlineKeyboardButton(text="🏠 Крытый вещевой рынок", callback_data="Крытый вещевой рынок"))
+        builder.row(types.InlineKeyboardButton(text="🏢 Торговый комплекс", callback_data="Торговый комплекс"))
+        builder.row(types.InlineKeyboardButton(text="🏗️ Строение", callback_data="Строение"))
         data_state = await state.get_data()
         if self.key_data_in_state in data_state and data_state[self.key_data_in_state]:
-            builder.row(types.InlineKeyboardButton(
-                text="Оставить текущее", callback_data="current")
-            )
-        builder.row(types.InlineKeyboardButton(
-            text="Назад", callback_data="back_location")
-        )
+            builder.row(types.InlineKeyboardButton(text="💾 Оставить текущее", callback_data="current"))
+        builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="back_location"))
         return builder
 
     async def _go_to_next_step(self, call: types.CallbackQuery, state: FSMContext):
@@ -170,17 +146,11 @@ class Location_address(Steps_base):
     
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(
-            text="Пропустить", callback_data="skip")
-        )
+        builder.row(types.InlineKeyboardButton(text="⏭️ Пропустить", callback_data="skip"))
         data_state = await state.get_data()
         if self.key_data_in_state in data_state and data_state[self.key_data_in_state]:
-            builder.row(types.InlineKeyboardButton(
-                text="Оставить текущее", callback_data="current")
-            )
-        builder.row(types.InlineKeyboardButton(
-            text="Назад", callback_data="back_location")
-        )
+            builder.row(types.InlineKeyboardButton(text="💾 Оставить текущее", callback_data="current"))
+        builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="back_location"))
         return builder
 
     async def _go_to_next_step(self, call: types.CallbackQuery, state: FSMContext):
@@ -201,20 +171,12 @@ class Location_building(Steps_base):
     
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(
-            text="Пропустить", callback_data="skip")
-        )
-        builder.row(types.InlineKeyboardButton(
-            text="Основной ТК", callback_data="Основной ТК")
-        )
+        builder.row(types.InlineKeyboardButton(text="⏭️ Пропустить", callback_data="skip"))
+        builder.row(types.InlineKeyboardButton(text="🏢 Основной ТК", callback_data="Основной ТК"))
         data_state = await state.get_data()
         if self.key_data_in_state in data_state and data_state[self.key_data_in_state]:
-            builder.row(types.InlineKeyboardButton(
-                text="Оставить текущее", callback_data="current")
-            )
-        builder.row(types.InlineKeyboardButton(
-            text="Назад", callback_data="back_location")
-        )
+            builder.row(types.InlineKeyboardButton(text="💾 Оставить текущее", callback_data="current"))
+        builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="back_location"))
         return builder
 
     async def _go_to_next_step(self, call: types.CallbackQuery, state: FSMContext):
@@ -235,17 +197,11 @@ class Location_floar(Steps_base):
     
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(
-            text="Пропустить", callback_data="skip")
-        )
+        builder.row(types.InlineKeyboardButton(text="⏭️ Пропустить", callback_data="skip"))
         data_state = await state.get_data()
         if self.key_data_in_state in data_state and data_state[self.key_data_in_state]:
-            builder.row(types.InlineKeyboardButton(
-                text="Оставить текущее", callback_data="current")
-            )
-        builder.row(types.InlineKeyboardButton(
-            text="Назад", callback_data="back_location")
-        )
+            builder.row(types.InlineKeyboardButton(text="💾 Оставить текущее", callback_data="current"))
+        builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="back_location"))
         return builder
 
     async def _go_to_next_step(self, call: types.CallbackQuery, state: FSMContext):
@@ -266,17 +222,11 @@ class Location_line(Steps_base):
     
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(
-            text="Пропустить", callback_data="skip")
-        )
+        builder.row(types.InlineKeyboardButton(text="⏭️ Пропустить", callback_data="skip"))
         data_state = await state.get_data()
         if self.key_data_in_state in data_state and data_state[self.key_data_in_state]:
-            builder.row(types.InlineKeyboardButton(
-                text="Оставить текущее", callback_data="current")
-            )
-        builder.row(types.InlineKeyboardButton(
-            text="Назад", callback_data="back_location")
-        )
+            builder.row(types.InlineKeyboardButton(text="💾 Оставить текущее", callback_data="current"))
+        builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="back_location"))
         return builder
 
     async def _go_to_next_step(self, call: types.CallbackQuery, state: FSMContext):
@@ -298,17 +248,11 @@ class Location_place(Steps_base):
     
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(
-            text="Пропустить", callback_data="skip")
-        )
+        builder.row(types.InlineKeyboardButton(text="⏭️ Пропустить", callback_data="skip"))
         data_state = await state.get_data()
         if self.key_data_in_state in data_state and data_state[self.key_data_in_state]:
-            builder.row(types.InlineKeyboardButton(
-                text="Оставить текущее", callback_data="current")
-            )
-        builder.row(types.InlineKeyboardButton(
-            text="Назад", callback_data="back_location")
-        )
+            builder.row(types.InlineKeyboardButton(text="💾 Оставить текущее", callback_data="current"))
+        builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="back_location"))
         return builder
 
     async def _go_to_next_step(self, call: types.CallbackQuery, state: FSMContext):
@@ -329,17 +273,11 @@ class Location_place(Steps_base):
     
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(
-            text="Пропустить", callback_data="skip")
-        )
+        builder.row(types.InlineKeyboardButton(text="⏭️ Пропустить", callback_data="skip"))
         data_state = await state.get_data()
         if self.key_data_in_state in data_state and data_state[self.key_data_in_state]:
-            builder.row(types.InlineKeyboardButton(
-                text="Оставить текущее", callback_data="current")
-            )
-        builder.row(types.InlineKeyboardButton(
-            text="Назад", callback_data="back_location")
-        )
+            builder.row(types.InlineKeyboardButton(text="💾 Оставить текущее", callback_data="current"))
+        builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="back_location"))
         return builder
 
     async def _go_to_next_step(self, call: types.CallbackQuery, state: FSMContext):
@@ -384,17 +322,11 @@ class Location_photo(Steps_base):
             
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(
-            text="Пропустить", callback_data="skip")
-        )
+        builder.row(types.InlineKeyboardButton(text="⏭️ Пропустить", callback_data="skip"))
         data_state = await state.get_data()
         if self.key_data_in_state in data_state and data_state[self.key_data_in_state]:
-            builder.row(types.InlineKeyboardButton(
-                text="Оставить текущее", callback_data="current")
-            )
-        builder.row(types.InlineKeyboardButton(
-            text="Назад", callback_data="back_location")
-        )
+            builder.row(types.InlineKeyboardButton(text="💾 Оставить текущее", callback_data="current"))
+        builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="back_location"))
         return builder
 
     async def _after_get_answer(self, call: types.CallbackQuery, state: FSMContext):
@@ -464,16 +396,10 @@ class location_description(Steps_base):
         builder = InlineKeyboardBuilder()
         data_state = await state.get_data()
         if 'id_location_in_db' in data_state and data_state['id_location_in_db']:
-            builder.row(types.InlineKeyboardButton(
-                text="Завершить редактирование", callback_data="finish_location_setting")
-            )
-            builder.row(types.InlineKeyboardButton(
-                text="Перейти к добавлению контактов", callback_data="contacts_menu")
-            )
+            builder.row(types.InlineKeyboardButton(text="✅ Завершить редактирование", callback_data="finish_location_setting"))
+            builder.row(types.InlineKeyboardButton(text="📞 Перейти к добавлению контактов", callback_data="contacts_menu"))
         else:
-            builder.row(types.InlineKeyboardButton(
-                text="Завершить добавление", callback_data="finish_location_adding")
-            )
+            builder.row(types.InlineKeyboardButton(text="✅ Завершить добавление", callback_data="finish_location_adding"))
         return builder
 
     async def _go_to_next_step(self, call: types.CallbackQuery, state: FSMContext):

@@ -107,12 +107,8 @@ class User (Base_hanler):
         await state.set_state(StateUser.register_buyer_get_city_process)
         await state.set_data({"city" : message.text})
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(
-            text="Правильно", callback_data="get_city_confirm")
-        )
-        builder.row(types.InlineKeyboardButton(
-            text="назад", callback_data="get_city_cancel")
-        )
+        builder.row(types.InlineKeyboardButton(text="✅ Правильно", callback_data="get_city_confirm"))
+        builder.row(types.InlineKeyboardButton(text="🔙 Назад", callback_data="get_city_cancel"))
         state_data = await state.get_data()
         await User.mssage_answer(message, "Вы из города " + state_data["city"] + "?", builder.as_markup())
     
@@ -173,15 +169,9 @@ class User (Base_hanler):
                 "🎯 Успей получить доступ к нашему боту и упростить свои оптовые сделки! 🤝💼\n")
         
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(
-            text="В меню продавца", callback_data="seller")
-        )
-        builder.row(types.InlineKeyboardButton(
-            text="В меню покупателя", callback_data="buyer")
-        )
-        builder.row(types.InlineKeyboardButton(
-            text='В главное меню', callback_data='main_menu')
-        )
+        builder.row(types.InlineKeyboardButton(text="🛍️ В меню продавца", callback_data="seller"))
+        builder.row(types.InlineKeyboardButton(text="👤 В меню покупателя", callback_data="buyer"))
+        builder.row(types.InlineKeyboardButton(text="🏠 В главное меню", callback_data="main_menu"))
         await User.mssage_answer(call, text, builder.as_markup())
 
     @staticmethod
@@ -213,9 +203,8 @@ class User (Base_hanler):
     async def _get_offerta(start : types.Message, state : FSMContext):
         text = "Продолжая пользоваться вы соглашаетесь с <b><a href='https://vk.com/@kotovskiy-otzyv'>пользовательским соглашением</a></b> и <b>политикой конфиденциальности</b>."
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(
-            text="Согласен с условиями пользотельского соглашения", callback_data="confirm_offerta")
-        )
+        builder.row(types.InlineKeyboardButton(text="✔️ Согласен с условиями пользовательского соглашения", callback_data="confirm_offerta"))
+
         if type(start) == types.CallbackQuery:
             await start.message.answer(text, reply_markup=builder.as_markup())
         else:
@@ -236,10 +225,10 @@ class User (Base_hanler):
     async def __response_main_menu(start : types.Message|types.CallbackQuery):
         builder = InlineKeyboardBuilder()
         builder.row(types.InlineKeyboardButton(
-            text="Продавец", callback_data="seller")
+            text="🛒 Продавец", callback_data="seller")
         )
         builder.row(types.InlineKeyboardButton(
-            text="Покупатель", callback_data="buyer")
+            text="🛍️ Покупатель", callback_data="buyer")
         )
         await User.mssage_answer(start, "Вы вошли как <b>Продавец</b> или <b>Покупатель</b>?", builder.as_markup())
 
@@ -249,6 +238,9 @@ class User (Base_hanler):
         builder = InlineKeyboardBuilder()
         builder.row(types.InlineKeyboardButton(
             text="📺 Посмотреть канал", url="https://t.me/optovi4ekchannel")
+        )
+        builder.row(types.InlineKeyboardButton(
+            text="📺 Посмотреть тестовый канал", url="https://t.me/tovartest ")
         )
         builder.add(types.InlineKeyboardButton(
             text="👥 Профиль", callback_data="profile")
@@ -286,6 +278,10 @@ class User (Base_hanler):
         builder.row(types.InlineKeyboardButton(
             text="📰 Новинки в канале",
             url="https://t.me/optovi4ekchannel")
+        )
+        builder.row(types.InlineKeyboardButton(
+            text="📰 Новинки в тестовом канале",
+            url="https://t.me/tovartest")
         )
         builder.add(types.InlineKeyboardButton(
             text="👥 Продавцы по категориям", callback_data="categories_search")
@@ -364,18 +360,10 @@ class User (Base_hanler):
     @staticmethod
     async def __get_inline_keyboard_profile():
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(
-            text="Организация", callback_data="organization")
-        )
-        builder.row(types.InlineKeyboardButton(
-            text="Контактные данные", callback_data="contacts_menu") 
-        )
-        builder.row(types.InlineKeyboardButton(
-            text="Место", callback_data="location")
-        )
-        builder.row(types.InlineKeyboardButton(
-            text="Назад в меню", callback_data="seller")
-        )
+        builder.row(types.InlineKeyboardButton(text="🏢 Организация", callback_data="organization"))
+        builder.row(types.InlineKeyboardButton(text="📞 Контактные данные", callback_data="contacts_menu") )
+        builder.row(types.InlineKeyboardButton(text="📍 Место", callback_data="location"))
+        builder.row(types.InlineKeyboardButton(text="↩️ Назад в меню", callback_data="seller"))
         builder.row()
         return builder.as_markup()
 

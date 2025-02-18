@@ -19,8 +19,8 @@ class Confirm_category (Steps_base):
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery | types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         data_state = await state.get_data()
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text="Назад", callback_data="back_seller_survey"))
-        builder.row(types.InlineKeyboardButton(text="Подтвердить", callback_data="confirm_seller_survey"))
+        builder.row(types.InlineKeyboardButton(text="🔙Назад", callback_data="back_seller_survey"))
+        builder.row(types.InlineKeyboardButton(text="✅Подтвердить", callback_data="confirm_seller_survey"))
         return builder
     
     async def _go_to_next_step(self, call: types.CallbackQuery | types.Message, state: FSMContext):

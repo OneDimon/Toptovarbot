@@ -46,10 +46,11 @@ class Response_seller():
                                          'request_id': request_info['request_id'],
                                         'response': [],
                                         'seller_id': seller_id})
-        
+        if request_info['photo'] == "":
+            await call.message.answer(str_response_one+str_response_two, reply_markup=inline_keyboard)
+            return
         photo = FSInputFile(request_info['photo'])
         await call.bot.send_photo(call.from_user.id, photo, caption=str_response_one+str_response_two, reply_markup=inline_keyboard)
-        # await call.message.answer(str_response_one+str_response_two, reply_markup=inline_keyboard)
         return True
         
     async def there_is_a_product_button_click(self, call: types.CallbackQuery, state: FSMContext):
@@ -189,43 +190,44 @@ class Response_seller():
             return response_hash
         
     async def __get_inline_price_product(self):
-        back = aiogram.types.InlineKeyboardButton(text="назад", callback_data='price_product_click_back')
-        missing = aiogram.types.InlineKeyboardButton(text="пропустить", callback_data='price_product_click_missing')
+        back = aiogram.types.InlineKeyboardButton(text="⬅️ Назад", callback_data='price_product_click_back')
+        missing = aiogram.types.InlineKeyboardButton(text="⏩ Пропустить", callback_data='price_product_click_missing')
         inline_price_markup = aiogram.types.InlineKeyboardMarkup(inline_keyboard=[[back, missing]])
         return inline_price_markup
-    
+
     async def __get_inline_quantity_product(self):
-        back = aiogram.types.InlineKeyboardButton(text="назад", callback_data='quantity_product_click_back')
-        missing = aiogram.types.InlineKeyboardButton(text="пропустить", callback_data='quantity_product_click_missing')
+        back = aiogram.types.InlineKeyboardButton(text="⬅️ Назад", callback_data='quantity_product_click_back')
+        missing = aiogram.types.InlineKeyboardButton(text="⏩ Пропустить", callback_data='quantity_product_click_missing')
         inline_quantity_markup = aiogram.types.InlineKeyboardMarkup(inline_keyboard=[[back, missing]])
         return inline_quantity_markup
-        
+
     async def __get_inline_goods_acept(self):
-        add_more_goods = aiogram.types.InlineKeyboardButton(text="Добавить еще аналогичный товар", callback_data='add_more_goods_click')
-        finall_adding = aiogram.types.InlineKeyboardButton(text="Завершить добавление", callback_data='finall_adding_click')
+        add_more_goods = aiogram.types.InlineKeyboardButton(text="➕ Добавить еще аналогичный товар", callback_data='add_more_goods_click')
+        finall_adding = aiogram.types.InlineKeyboardButton(text="✅ Завершить добавление", callback_data='finall_adding_click')
         inline_goods_markup = aiogram.types.InlineKeyboardMarkup(inline_keyboard=[[add_more_goods, finall_adding]])
         return inline_goods_markup
-    
+
     async def __get_inline_request_info(self):
-        there_is_a_product = aiogram.types.InlineKeyboardButton(text="есть товар", callback_data='there_is_a_product_button')
-        no_product = aiogram.types.InlineKeyboardButton(text="нет товара", callback_data='no_product_button') 
-        there_is_similar_product = aiogram.types.InlineKeyboardButton(text="есть похожий", callback_data='there_is_similar_product_button')
-        await_product = aiogram.types.InlineKeyboardButton(text="ожидаю товар", callback_data='await_product_button')
+        there_is_a_product = aiogram.types.InlineKeyboardButton(text="✅ Есть товар", callback_data='there_is_a_product_button')
+        no_product = aiogram.types.InlineKeyboardButton(text="❌ Нет товара", callback_data='no_product_button') 
+        there_is_similar_product = aiogram.types.InlineKeyboardButton(text="🔍 Есть похожий", callback_data='there_is_similar_product_button')
+        await_product = aiogram.types.InlineKeyboardButton(text="⏳ Ожидаю товар", callback_data='await_product_button')
         inline_request_markup = aiogram.types.InlineKeyboardMarkup(inline_keyboard=[[there_is_a_product, no_product, there_is_similar_product, await_product]])
         return inline_request_markup
 
+
     async def __send_message(self, id_seller: int):
-        inline_request_button = aiogram.types.InlineKeyboardButton(text="ответить", callback_data='response_button')
+        inline_request_button = aiogram.types.InlineKeyboardButton(text="👌 ответить", callback_data='response_button')
         inline_request_markup = aiogram.types.InlineKeyboardMarkup(inline_keyboard=[[inline_request_button]])
         bot = aiogram.Bot("6799809082:AAHLFNSkurXTr_jToBMsc4i2xKuCRz-rS44")
         await bot.send_message(id_seller, "у вас есть новый запрос", reply_markup=inline_request_markup)
 
     async def __get_inline_await_product(self):
-        await_product_back = aiogram.types.InlineKeyboardButton(text="назад", callback_data='await_product_back')
-        await_product_1_day = aiogram.types.InlineKeyboardButton(text="1 день", callback_data='await_product_1_day')
-        await_product_3_day = aiogram.types.InlineKeyboardButton(text="3 дня", callback_data='await_product_3_day')
-        await_product_5_day = aiogram.types.InlineKeyboardButton(text="5 дней", callback_data='await_product_5_day')
-        await_product_7_day = aiogram.types.InlineKeyboardButton(text="7 дней", callback_data='await_product_7_day')
+        await_product_back = aiogram.types.InlineKeyboardButton(text="↘️назад", callback_data='await_product_back')
+        await_product_1_day = aiogram.types.InlineKeyboardButton(text="1️⃣1 день", callback_data='await_product_1_day')
+        await_product_3_day = aiogram.types.InlineKeyboardButton(text="3️⃣3 дня", callback_data='await_product_3_day')
+        await_product_5_day = aiogram.types.InlineKeyboardButton(text="5️⃣5 дней", callback_data='await_product_5_day')
+        await_product_7_day = aiogram.types.InlineKeyboardButton(text="7️⃣7 дней", callback_data='await_product_7_day')
 
         inline_request_markup = aiogram.types.InlineKeyboardMarkup(inline_keyboard=[[await_product_back,
                                                                                     await_product_1_day,
@@ -235,7 +237,7 @@ class Response_seller():
         return inline_request_markup
     
     async def __send_finish_response(self, call: types.CallbackQuery, state: FSMContext):
-       await call.message.answer("Спасибо за ваш ответ!")
+       await call.message.answer("👍!")
        await state.clear()
 
     async def __getDataContext(self, state: FSMContext):

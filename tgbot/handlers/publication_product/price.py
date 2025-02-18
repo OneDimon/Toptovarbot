@@ -11,13 +11,18 @@ class Price (Steps_base):
         super().__init__(name, module)
     
     async def _get_text_for_question(self, call: types.CallbackQuery | types.Message, state: FSMContext) -> str:
-        text = 'Укажите цену'
+        text = 'Укажите цену товара в рублях целым числом например: 1000'
         return text
     
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery | types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text="Назад", callback_data="back_publication_product"))
+        builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="back_publication_product"))
         return builder
+    
+    async def _before_get_answer(self, call, state):
+        if not call.text.isdigit():
+            await self.mssage_answer('Вы ввели не число')
+            return True
     
     async def _go_to_next_step(self, message: types.Message, state: FSMContext):
         from . import Photo

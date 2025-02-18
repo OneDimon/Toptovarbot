@@ -44,10 +44,10 @@ class Contacts (Base_hanler):
     @staticmethod
     async def __get_contacts_menu_keyboard(call: types.CallbackQuery, state: FSMContext):
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text="отредактировать/добавить ссылку на Telegram", callback_data="contacts_telegram"))
-        builder.row(types.InlineKeyboardButton(text="отредактировать/добавить WhatsAppPhone", callback_data="contacts_whatsapp_link"))
-        builder.row(types.InlineKeyboardButton(text="отредактировать/добавить ссылку на админ страницу вк", callback_data="contacts_admin_vk_link"))
-        builder.row(types.InlineKeyboardButton(text="Завершить добавление/редактирование", callback_data="seller"))
+        builder.row(types.InlineKeyboardButton(text="✏️ Отредактировать/добавить ссылку на Telegram", callback_data="contacts_telegram"))
+        builder.row(types.InlineKeyboardButton(text="📲 Отредактировать/добавить WhatsAppPhone", callback_data="contacts_whatsapp_link"))
+        builder.row(types.InlineKeyboardButton(text="🔗 Отредактировать/добавить ссылку на админ страницу ВК", callback_data="contacts_admin_vk_link"))
+        builder.row(types.InlineKeyboardButton(text="✅ Завершить добавление/редактирование", callback_data="seller"))
         return builder.as_markup()
     
 
@@ -95,9 +95,10 @@ class Contacts_type(Steps_base):
         builder = InlineKeyboardBuilder()
 
         for contact in contacs_type:
-            builder.row(types.InlineKeyboardButton(text=contact[2], callback_data=f"edit_contact_{contact[0]}"))
-        builder.row(types.InlineKeyboardButton(text='добавить', callback_data=f"add_contact_{self.name}"))
-        builder.row(types.InlineKeyboardButton(text='назад', callback_data='contacts_menu'))
+            builder.row(types.InlineKeyboardButton(text=f"✏️ {contact[2]}", callback_data=f"edit_contact_{contact[0]}"))
+        builder.row(types.InlineKeyboardButton(text="➕ Добавить", callback_data=f"add_contact_{self.name}"))
+        builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="contacts_menu"))
+
         return builder
 
     async def _go_to_next_step(self, call: types.CallbackQuery, state: FSMContext):
@@ -126,7 +127,7 @@ class Contact_add(Steps_base):
     
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text='назад', callback_data='back_contacts'))
+        builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="back_contacts"))
         return builder
     
     async def _after_start_of_step(self, call: types.CallbackQuery, state: FSMContext):
@@ -173,9 +174,9 @@ class Contact_edit_or_delete(Steps_base):
     
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text='удалить', callback_data='delete_contact'))
-        builder.row(types.InlineKeyboardButton(text='редактировать', callback_data='edit_contact'))
-        builder.row(types.InlineKeyboardButton(text='назад', callback_data='back_contacts'))
+        builder.row(types.InlineKeyboardButton(text="🗑️ Удалить", callback_data="delete_contact"))
+        builder.row(types.InlineKeyboardButton(text="✏️ Редактировать", callback_data="edit_contact"))
+        builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="back_contacts"))
         return builder
     
     async def _go_to_next_step(self, call: types.CallbackQuery, state: FSMContext):
@@ -204,7 +205,7 @@ class Contact_edit(Steps_base):
 
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text='назад', callback_data='back_contacts'))
+        builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="back_contacts"))
         return builder
     
     async def _before_get_answer(self, call: types.CallbackQuery | types.Message, state: FSMContext):
@@ -243,8 +244,8 @@ class Contact_delete(Steps_base):
     
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text='назад', callback_data='back_contacts'))
-        builder.row(types.InlineKeyboardButton(text='удалить', callback_data=f'delete_contact_confirm'))
+        builder.row(types.InlineKeyboardButton(text='⬅️ назад', callback_data='back_contacts'))
+        builder.row(types.InlineKeyboardButton(text='🗑️ удалить', callback_data=f'delete_contact_confirm'))
         return builder
     
     async def _after_get_answer(self, call: types.CallbackQuery | types.Message, state: FSMContext):

@@ -17,12 +17,9 @@ class Confirm(Steps_base):
         
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(
-            text="Отправить запрос продавцам", callback_data="send_seller_survey")
-            )
-        builder.row(types.InlineKeyboardButton(
-            text="Назад", callback_data="back_seller_survey")
-        )
+        builder.row(types.InlineKeyboardButton(text="📩 Отправить запрос продавцам", callback_data="send_seller_survey"))
+        builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="back_seller_survey"))
+
         return builder
 
     async def _after_get_answer(self, call: types.CallbackQuery | types.Message, state: FSMContext):
@@ -37,9 +34,9 @@ class Confirm(Steps_base):
 
     async def __message_answer_buyer(self, call: types.CallbackQuery | types.Message, state: FSMContext):
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(
-            text="Вернуться в меню покупателя", callback_data="buyer")
-            )
+        builder.row(types.InlineKeyboardButton(text="🔙 Вернуться в меню покупателя", callback_data="buyer"))
+        builder.row(types.InlineKeyboardButton(text="✅ на сегодня все", callback_data="main_menu"))
+        builder.row(types.InlineKeyboardButton(text="🔍 искать еще", callback_data="seller_survey"))
         text = 'Результат запроса будет Вам предоставлен через 15 минут(предварительный) и еще 15 минут будет пополняться'
         await self.mssage_answer(call, text, builder.as_markup())
 
@@ -69,10 +66,10 @@ class Confirm(Steps_base):
     
 
     async def __message_answer_15_min(self, call: types.CallbackQuery | types.Message, state: FSMContext, hash_result):
-        text = "по данной ссылке вы можете посмтреть промежуточный результат опроса продавцов: " + 'http://tovartest.ru/response_seller/?hash=' + hash_result
+        text = "по данной ссылке вы можете посмтреть промежуточный результат опроса продавцов: " + 'http://tovartest.ru/catalog/?hash=' + hash_result
         await self.mssage_answer(call, text)
 
     async def __message_answer_30_min(self, call: types.CallbackQuery | types.Message, state: FSMContext, hash_result):
-        text = "по данной ссылке вы можете посмтреть окнчательный результат опроса продавцов: " + 'http://tovartest.ru/response_seller/?hash=' + hash_result
+        text = "по данной ссылке вы можете посмтреть окнчательный результат опроса продавцов: " + 'http://tovartest.ru/catalog/?hash=' + hash_result
         await self.mssage_answer(call, text)
         

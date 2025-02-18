@@ -21,8 +21,8 @@ class Confirm (Steps_base):
     
     async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery | types.Message, state: FSMContext) -> InlineKeyboardBuilder:
         builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text="Назад", callback_data="back_categories_search"))
-        builder.row(types.InlineKeyboardButton(text="Подтвердить", callback_data="confirm_categories_search"))
+        builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="back_categories_search"))
+        builder.row(types.InlineKeyboardButton(text="✅ Подтвердить", callback_data="confirm_categories_search"))
         return builder
     
     async def _go_to_next_step(self, call: types.CallbackQuery | types.Message, state: FSMContext):
@@ -48,5 +48,8 @@ class Confirm (Steps_base):
     async def __response_finish(self, call: types.CallbackQuery | types.Message, state: FSMContext):
         data_state = await state.get_data()
         link = 'http://tovartest.ru/contact/?link=' + data_state['hash_categories_search']
-        await self.mssage_answer(call, 'Ваш поиск завершен, вы можете посмотреть результаты поиска \n' + link + '',)
+        builder = InlineKeyboardBuilder()
+        builder.row(types.InlineKeyboardButton(text="✅ На сегодня всё", callback_data="main_menu"))
+        builder.row(types.InlineKeyboardButton(text="🔍 Искать ещё", callback_data="categories_search"))
+        await self.mssage_answer(call, 'Ваш поиск завершен, вы можете посмотреть результаты поиска \n' + link + '', builder.as_markup())
 
