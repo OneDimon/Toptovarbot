@@ -1,6 +1,10 @@
 import sys
 import os
-sys.path.append(os.getcwd())
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+# Делаем эту директорию текущей
+os.chdir(BASE_DIR)
+# Добавляем её в sys.path, чтобы корректно работали импорты
+sys.path.append(BASE_DIR)
 import psycopg2
 from config_data.config import *
 import importlib.util
@@ -14,6 +18,7 @@ DB_PARAMS = {
 }
 
 MIGRATIONS_DIR = "update_system/migrations"
+
 
 def apply_sql_migration(cursor, filename):
     """Читает и выполняет SQL-файл"""
