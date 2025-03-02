@@ -1,13 +1,11 @@
 from aiogram import types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.context import FSMContext
-from states.states import contacts as StateContacts
-from handlers.base_handler_class import Base_hanler, Steps_base
-from aiogram.types import FSInputFile
-from database.contacts import Contacts_database as DB_contacts
+from handlers.base_handler_class import BaseHandler, StepsBase
+from database.contacts import ContactsDatabase as DB_contacts
 
 
-class Contacts (Base_hanler):
+class Contacts (BaseHandler):
 
     @staticmethod
     async def if_contacts(user_id: int) -> bool:
@@ -39,7 +37,7 @@ class Contacts (Base_hanler):
     async def __send_contacts_menu(call: types.CallbackQuery, state: FSMContext):
         keyboard = await Contacts.__get_contacts_menu_keyboard(call, state)
         text = await Contacts.__get_contacts_menu_text(call, state)
-        await Base_hanler.mssage_answer(call, text, keyboard)
+        await BaseHandler.mssage_answer(call, text, keyboard)
 
     @staticmethod
     async def __get_contacts_menu_keyboard(call: types.CallbackQuery, state: FSMContext):
@@ -79,178 +77,3 @@ class Contacts (Base_hanler):
         data_state['ar_func_contacts'].pop()
         func = data_state['ar_func_contacts'][-1]
         await func(call, state)
-
-
-class Contacts_type(Steps_base):
-    def __init__(self, name = 'telegram'):
-        module = 'contacts'
-        super().__init__(name, module)
-    
-    async def _get_text_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> str:
-        text = f'Выберите {self.name} контакт, который хоттите отредактировать или удалить'
-        return text
-    
-    async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> InlineKeyboardBuilder:
-        contacs_type = await DB_contacts.get_type_contacts(call.from_user.id, self.name)
-        builder = InlineKeyboardBuilder()
-
-        for contact in contacs_type:
-            builder.row(types.InlineKeyboardButton(text=f"✏️ {contact[2]}", callback_data=f"edit_contact_{contact[0]}"))
-        builder.row(types.InlineKeyboardButton(text="➕ Добавить", callback_data=f"add_contact_{self.name}"))
-        builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="contacts_menu"))
-
-        return builder
-
-    async def _go_to_next_step(self, call: types.CallbackQuery, state: FSMContext):
-        data_state = await state.get_data()
-        id = call.data.split('_')[-1]
-        method = call.data.split('_')[0]
-        if method == 'add':
-            await Contact_add(id).start_of_step(call, state)
-            return
-        try:
-            float(id)   
-            await Contact_edit_or_delete(id).start_of_step(call, state)
-        except:
-            await Contacts.contacts_menu(call, state)
-
-class Contact_add(Steps_base):
-    def __init__(self, type = 0):
-        name = 'add'
-        module = 'contacts'
-        self.type = type
-        super().__init__(name, module)
-
-    async def _get_text_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> str:
-        text = f'Введите контакт, который хоттите добавить'
-        return text
-    
-    async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> InlineKeyboardBuilder:
-        builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="back_contacts"))
-        return builder
-    
-    async def _after_start_of_step(self, call: types.CallbackQuery, state: FSMContext):
-        date_state = await state.get_data()
-        if self.type != 0:
-            date_state['contact_type'] = self.type
-            await state.update_data(date_state)
-
-    async def _before_get_answer(self, call: types.CallbackQuery | types.Message, state: FSMContext):
-        data_state = await state.get_data()
-        self.type = data_state['contact_type']
-
-    async def _after_get_answer(self, call: types.CallbackQuery | types.Message, state: FSMContext):
-        if type(call) == types.Message:
-            contact = call.text
-            await DB_contacts.add_contact(call.from_user.id, contact, self.type)
-    
-    async def _go_to_next_step(self, call: types.CallbackQuery, state: FSMContext):
-        await Contacts.contacts_menu(call, state)
-
-class Contact_edit_or_delete(Steps_base):
-    def __init__(self, id = 0):
-        name = 'edit_or_delete'
-        module = 'contacts'
-        super().__init__(name, module)
-        self.id = id
-        
-    async def _get_text_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> str:
-        contact = await DB_contacts.get_contact(self.id)
-        text = f'Выберите действие с {contact[0][2]} контактом \n'
-        text += f'Вы хотите удалить или отредактировать данный контакт'
-        return text
-    
-    async def _after_start_of_step(self, call: types.CallbackQuery, state: FSMContext):
-        date_state = await state.get_data()
-        if self.id != 0:
-            date_state['contact_id'] = self.id
-            await state.update_data(date_state)
-    
-    async def _before_get_answer(self, call: types.CallbackQuery | types.Message, state: FSMContext):
-        data_state = await state.get_data()
-        self.id = data_state['contact_id']
-        return await super()._before_get_answer(call, state)
-    
-    async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> InlineKeyboardBuilder:
-        builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text="🗑️ Удалить", callback_data="delete_contact"))
-        builder.row(types.InlineKeyboardButton(text="✏️ Редактировать", callback_data="edit_contact"))
-        builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="back_contacts"))
-        return builder
-    
-    async def _go_to_next_step(self, call: types.CallbackQuery, state: FSMContext):
-        if call.data == 'delete_contact':
-            await Contact_delete(self.id).start_of_step(call, state)
-        elif call.data == 'edit_contact':
-            await Contact_edit(self.id).start_of_step(call, state)
-
-class Contact_edit(Steps_base):
-    def __init__(self, id = 0):
-        name = 'edit'
-        module = 'contacts'
-        super().__init__(name, module)
-        self.id = id
-
-    async def _get_text_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> str:
-        text = f'Введите новые данные'
-        return text
-    
-
-    async def _after_start_of_step(self, call: types.CallbackQuery, state: FSMContext):
-        date_state = await state.get_data()
-        if self.id != 0:
-            date_state['contact_id'] = self.id
-            await state.update_data(date_state)
-
-    async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> InlineKeyboardBuilder:
-        builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="back_contacts"))
-        return builder
-    
-    async def _before_get_answer(self, call: types.CallbackQuery | types.Message, state: FSMContext):
-        data_state = await state.get_data()
-        self.id = data_state['contact_id']
-        return await super()._before_get_answer(call, state)
-
-    async def _go_to_next_step(self, call: types.CallbackQuery, state: FSMContext): 
-        await Contacts.contacts_menu(call, state)
-
-    async def _after_get_answer(self, call: types.CallbackQuery | types.Message, state: FSMContext):
-        if type(call) == types.Message:
-            await DB_contacts.edit_contact(self.id, call.text)
-
-class Contact_delete(Steps_base):
-    def __init__(self, id = 0):
-        name = 'delete'
-        module = 'contacts'
-        super().__init__(name, module)
-        self.id = id
-
-    async def _get_text_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> str:
-        contact = await DB_contacts.get_contact(self.id)
-        text = f'Вы хотите удалить {contact[0][2]} контакт'
-        return text
-    
-    async def _before_get_answer(self, call: types.CallbackQuery | types.Message, state: FSMContext):
-        data_state = await state.get_data()
-        self.id = data_state['contact_id']
-        return await super()._before_get_answer(call, state)
-    
-    async def _after_start_of_step(self, call: types.CallbackQuery, state: FSMContext):
-        date_state = await state.get_data()
-        date_state['contact_id'] = self.id
-        await state.update_data(date_state)
-    
-    async def _get_builder_inline_keyboard_for_question(self, call: types.CallbackQuery|types.Message, state: FSMContext) -> InlineKeyboardBuilder:
-        builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text='⬅️ назад', callback_data='back_contacts'))
-        builder.row(types.InlineKeyboardButton(text='🗑️ удалить', callback_data=f'delete_contact_confirm'))
-        return builder
-    
-    async def _after_get_answer(self, call: types.CallbackQuery | types.Message, state: FSMContext):
-        if type(call) == types.CallbackQuery and call.data == 'delete_contact_confirm':
-            await DB_contacts.delete_contact(self.id)
-    async def _go_to_next_step(self, call: types.CallbackQuery, state: FSMContext):
-        await Contacts.contacts_menu(call, state)
-

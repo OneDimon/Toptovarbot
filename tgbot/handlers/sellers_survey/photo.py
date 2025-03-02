@@ -1,12 +1,12 @@
 from aiogram import types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.context import FSMContext
-from handlers.base_handler_class import Steps_base
+from handlers.base_handler_class import StepsBase
 from aiogram.types import FSInputFile
 from config_data.config import *
 
 
-class Photo(Steps_base):
+class Photo(StepsBase):
     def __init__(self):
         name = 'photo'
         module = 'seller_survey'
@@ -41,8 +41,8 @@ class Photo(Steps_base):
             data_state["number_of_attempts"] = 1
 
         await state.update_data(data_state)
-        from modules.photo_verification_modules import Photo_verification_modules
-        photo_id = await Photo_verification_modules.photo_verification(call, data_state["number_of_attempts"])
+        from modules.photo_verification_modules import PhotoVerificationModules
+        photo_id = await PhotoVerificationModules.photo_verification(call, data_state["number_of_attempts"])
 
         if photo_id:
             data_state['seller_survey_photo_id'] = photo_id
@@ -64,6 +64,6 @@ class Photo(Steps_base):
         await state.update_data(data_state)
      
     async def _go_to_next_step(self, call: types.CallbackQuery, state: FSMContext):
-        from . import Name_product
-        await Name_product().start_of_step(call, state)
+        from . import NameProduct
+        await NameProduct().start_of_step(call, state)
 

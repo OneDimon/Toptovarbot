@@ -1,6 +1,6 @@
 from database import base
 
-class Product_database (base.Base_database):
+class ProductDatabase (base.BaseDatabase):
 
     @staticmethod
     async def create_table():
@@ -19,20 +19,20 @@ class Product_database (base.Base_database):
                 AVAILABLE BOOLEAN DEFAULT TRUE,
                 FOREIGN KEY(USER_ID) REFERENCES users(USER_ID)
             )"""
-        await Product_database.query_database(Product_database(), query)
+        await ProductDatabase.query_database(ProductDatabase(), query)
 
     @staticmethod
     async def get_product_by_user(id_user):
         query = f"""SELECT * FROM product WHERE USER_ID = {id_user}"""
-        return await Product_database.query_database(Product_database(), query)
+        return await ProductDatabase.query_database(ProductDatabase(), query)
     
     @staticmethod
     async def get_product_by_user_and_date(id_user, date):
         query = f"""SELECT * FROM product WHERE USER_ID = {id_user} AND DATE_PUBLICATION = '{date}'"""
-        return await Product_database.query_database(Product_database(), query)
+        return await ProductDatabase.query_database(ProductDatabase(), query)
     
     @staticmethod
     async def publication_product(id_user, name, description, price, category, category_two, category_three, photo):
         query = f"""INSERT INTO product (USER_ID, NAME, DESCRIPTION, CATEGORY, CATEGORY_TWO, CATEGORY_THREE, PRICE, PHOTO, DATE_PUBLICATION)
                  VALUES ({id_user}, '{name}', '{description}', '{category}', '{category_two}', '{category_three}', {price}, '{photo}', NOW())"""
-        await Product_database.query_database(Product_database(), query)
+        await ProductDatabase.query_database(ProductDatabase(), query)

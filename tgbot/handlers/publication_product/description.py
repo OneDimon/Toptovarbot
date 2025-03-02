@@ -1,10 +1,10 @@
 from aiogram import types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.context import FSMContext
-from handlers.base_handler_class import  Steps_base
+from handlers.base_handler_class import  StepsBase
 from config_data.config import *
 
-class Description (Steps_base):
+class Description (StepsBase):
     def __init__(self):
         name = 'description'
         module = 'publication_product'
@@ -20,5 +20,5 @@ class Description (Steps_base):
         return builder
     
     async def _go_to_next_step(self, message: types.Message, state: FSMContext):
-        from . import Categories_inline
-        await Categories_inline().start_of_step(message, state)
+        from . import CategoriesInline
+        await CategoriesInline().start_of_step(message, state)

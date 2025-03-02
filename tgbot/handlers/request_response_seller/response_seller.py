@@ -1,19 +1,16 @@
-from database.request_response_seller.request_response_seller import Request_response_seller_database as DB
+from database.request_response_seller.request_response_seller import RequestResponseSellerDatabase as DB
 import aiogram
-import asyncio
-from aiogram import Bot, Dispatcher, types
-from aiogram.filters import Command
+from aiogram import  types
 from datetime import datetime, timedelta
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import StatesGroup, State
 from handlers.request_response_seller.request_response_states import ResponseSeller as RS_state
-from modules.photo_verification_modules import Photo_verification_modules
+from modules.photo_verification_modules import PhotoVerificationModules
 import hashlib
 from aiogram.types import FSInputFile
 
 
 
-class Response_seller():
+class ResponseSeller():
     
     async def send_message_seller(self, id_seller: int):
         response = await DB().get_respnse_in_progress(id_seller)
@@ -96,13 +93,13 @@ class Response_seller():
     
     async def photo_product(self, message: types.Message, state: FSMContext):
         data_context = await self.__getDataContext(state)
-
+        import os
         if ('number_of_attempts' in data_context):
             data_context['number_of_attempts'] += 1
         else:
             data_context['number_of_attempts'] = 1
 
-        result_photo_verification = await Photo_verification_modules.photo_verification(message, data_context['number_of_attempts'])
+        result_photo_verification = await PhotoVerificationModules.photo_verification(message, data_context['number_of_attempts'])
 
         if result_photo_verification:
             await state.set_state(RS_state.there_is_a_product_photo_uploaded)

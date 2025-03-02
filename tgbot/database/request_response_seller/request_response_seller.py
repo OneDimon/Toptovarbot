@@ -15,7 +15,7 @@ from datetime import datetime, timedelta
 
 
 
-class Request_response_seller_database(base.Base_database):
+class RequestResponseSellerDatabase(base.BaseDatabase):
     """
     Класс для работы с базой данных запросов-ответов. 
     """
@@ -69,7 +69,7 @@ class Request_response_seller_database(base.Base_database):
         except Exception as e:
             print(e)
 
-    async def get_ready_response(self, id_seller: int, name_product: str, date_request: str)->None or dict:
+    async def get_ready_response(self, id_seller: int, name_product: str, date_request: str)->None|dict:
         query = f"""SELECT response, date_next_request FROM request_response_seller
                  WHERE ID_SELLER = {id_seller} 
                  AND NAME_PRODUCT = '{name_product}'
@@ -129,12 +129,12 @@ class Request_response_seller_database(base.Base_database):
         return result
     
     async def get_request_info_fields(self, id_seller: int):
-        from database.categories_product import Categories_product_database
+        from database.categories_product import CategoriesProductDatabase
         product_and_datetime_request = await self.get_request_info_request(id_seller)
         if (product_and_datetime_request == None):
             return None
         
-        category_all = await Categories_product_database.get_three_categories(product_and_datetime_request[4])
+        category_all = await CategoriesProductDatabase.get_three_categories(product_and_datetime_request[4])
         product = product_and_datetime_request[0]
         datetime_request = product_and_datetime_request[1]
         request_id = product_and_datetime_request[2]
@@ -159,13 +159,13 @@ class Request_response_seller_database(base.Base_database):
 
     async def __validation_data_request_seller(self, arParams: dict)->None: 
         if 'id_buyer' not in arParams or arParams['id_buyer'] == None or type(arParams['id_buyer']) != int:
-            raise Excetion_id_buyer_not_found
+            raise ExcetionIdBuyerNotFound
         if 'id_seller' not in arParams or arParams['id_seller'] == None or type(arParams['id_seller']) != int:
-            raise Excetion_id_seller_not_found
+            raise ExcetionIdSellerNotFound
         if 'name_product' not in arParams or arParams['name_product'] == None or type(arParams['name_product']) != str:
-            raise  Excetion_name_product_not_found
+            raise  ExcetionNameProductNotFound
         if 'date_request' not in arParams or arParams['date_request'] == None or type(arParams['date_request']) != str:
-            raise  Exception_date_request_not_found
+            raise  ExceptionDateRequestNotFound
 
 
     async def __adding_query_database_request_seller(self, arParams: dict)->None:

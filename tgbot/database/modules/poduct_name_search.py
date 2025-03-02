@@ -1,6 +1,6 @@
 import database.base as base
 
-class Product_name_search_database(base.Base_database):
+class ProductNameSearchDatabase(base.BaseDatabase):
 
     async def get_product_name_search(self, product_name):
         query = f""" SELECT DISTINCT product_name 

@@ -1,12 +1,12 @@
 from aiogram import types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.context import FSMContext
-from database.prouct import Product_database as DB_product
-from handlers.base_handler_class import  Steps_base
+from database.prouct import ProductDatabase as DB_product
+from handlers.base_handler_class import  StepsBase
 from aiogram.types import FSInputFile
 from config_data.config import *
 
-class Photo (Steps_base):
+class Photo (StepsBase):
     def __init__(self):
         name = 'photo'
         module = 'publication_product'
@@ -28,8 +28,8 @@ class Photo (Steps_base):
         else:
             data_state["number_of_attempts"] = 1
         await state.update_data(data_state)
-        from modules.photo_verification_modules import Photo_verification_modules
-        photo_id = await Photo_verification_modules.photo_verification(call, data_state["number_of_attempts"])
+        from modules.photo_verification_modules import PhotoVerificationModules
+        photo_id = await PhotoVerificationModules.photo_verification(call, data_state["number_of_attempts"])
         if photo_id:
             data_state['location_photo_id'] = photo_id
             await state.update_data(data_state)

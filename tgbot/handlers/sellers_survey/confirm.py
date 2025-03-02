@@ -1,12 +1,12 @@
 from aiogram import types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.context import FSMContext
-from database.categories_product import Categories_product_database as DB_categories_product
-from handlers.base_handler_class import  Steps_base
+from database.categories_product import CategoriesProductDatabase as DB_categories_product
+from handlers.base_handler_class import  StepsBase
 from config_data.config import *
 import asyncio
 
-class Confirm(Steps_base):
+class Confirm(StepsBase):
     def __init__(self):
         name = 'confirm'
         module = 'seller_survey'
@@ -54,7 +54,7 @@ class Confirm(Steps_base):
         from datetime import datetime
         from handlers.request_response_seller import request_seller
         data_state = await state.get_data()
-        request_seller_obj = request_seller.Request_seller()
+        request_seller_obj = request_seller.RequestSeller()
         now = datetime.now()
         hash_request = await request_seller_obj.set_request_seller(call.from_user.id,
                                                     data_state['seller_survey_sellers_id'][0], 

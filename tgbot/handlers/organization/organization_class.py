@@ -2,15 +2,15 @@ from aiogram.filters.command import Command
 from aiogram import types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.context import FSMContext
-from database.users import Users_database as DB_users
-from database.organization import Organization_database as DB_organization
-from states.states import organization as StateOrganization
-from handlers.base_handler_class import Base_hanler, Steps_base
-from modules.photo_verification_modules import Photo_verification_modules
+from database.users import UsersDatabase as DB_users
+from database.organization import OrganizationDatabase as DB_organization
+from states.states import Organization as StateOrganization
+from handlers.base_handler_class import BaseHandler, StepsBase
+from modules.photo_verification_modules import PhotoVerificationModules
 from aiogram.types import FSInputFile
 
 
-class Organization (Steps_base):
+class Organization (StepsBase):
 
     @staticmethod
     async def if_organization(user_id : int) -> bool:

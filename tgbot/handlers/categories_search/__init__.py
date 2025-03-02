@@ -1,3 +1,3 @@
-from .main_class import Categories_search
+from .main_class import CategoriesSearch
 from .inline import Inline
 from .confirm import Confirm

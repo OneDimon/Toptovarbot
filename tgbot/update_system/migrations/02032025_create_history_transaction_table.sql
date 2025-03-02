@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS history_transaction 
+        (
+            ID BIGSERIAL PRIMARY KEY NOT NULL,
+            USER_ID BIGINT NOT NULL,
+            AMOUNT DECIMAL(10, 2) NOT NULL,
+            AMOUNT_RUB DECIMAL(10, 2) NOT NULL,
+            TYPE VARCHAR(100) NOT NULL,
+            DATE_TIME TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (USER_ID) REFERENCES users (USER_ID)
+        );

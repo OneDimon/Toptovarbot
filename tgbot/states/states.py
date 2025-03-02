@@ -5,7 +5,7 @@ class StateUser(StatesGroup):
     register_buyer_get_city_process = State()
 
 
-class location(StatesGroup):
+class Location(StatesGroup):
     name = State()
     sector = State()
     building = State()
@@ -17,7 +17,7 @@ class location(StatesGroup):
     photo = State()
     description = State()
 
-class contacts(StatesGroup):
+class Contacts(StatesGroup):
     telegram = State()
     whatsapplink = State()
     admin_vk_link = State()
@@ -27,30 +27,32 @@ class contacts(StatesGroup):
     edit_or_delete = State()
 
 
-class organization(StatesGroup):
+class Organization(StatesGroup):
     organization = State()
 
-class publication_product(StatesGroup):
+class PublicationProduct(StatesGroup):
     name = State()
     description = State()
     categories_inline = State()
     price = State()
     photo = State()
 
-class categories_search(StatesGroup):
+class CategoriesSearch(StatesGroup):
     category_one_level = State()
     category_two_level = State()
     category_three_level = State()
     confirm = State()
     inline = State()
 
-class seller_survey(StatesGroup):
+class SellerSurvey(StatesGroup):
     categories_inline = State()
     confirm_category = State()
     photo = State()
     name_product = State()
     confirm = State()
 
-class balance(StatesGroup):
+class Balance(StatesGroup):
     menu = State()
     top_up = State()
+    out = State()
+    transaction_history = State()

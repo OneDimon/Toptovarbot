@@ -1,10 +1,10 @@
 from aiogram import types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.context import FSMContext
-from handlers.base_handler_class import Steps_base
+from handlers.base_handler_class import StepsBase
 from config_data.config import *
 
-class Price (Steps_base):
+class Price (StepsBase):
     def __init__(self):
         name = 'price'
         module = 'publication_product'
@@ -21,7 +21,7 @@ class Price (Steps_base):
     
     async def _before_get_answer(self, call, state):
         if not call.text.isdigit():
-            await self.mssage_answer('Вы ввели не число')
+            await self.mssage_answer(call, 'Вы ввели не число')
             return True
     
     async def _go_to_next_step(self, message: types.Message, state: FSMContext):

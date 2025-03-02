@@ -1,5 +1,5 @@
-from .category_inline import Categories_inline
-from .main_class import Publication_product
+from .category_inline import CategoriesInline
+from .main_class import PublicationProduct
 from .description import Description
 from .name import Name
 from .photo import Photo

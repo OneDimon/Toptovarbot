@@ -1,11 +1,11 @@
 
 from aiogram import *
-from database.request_response_seller.request_response_seller import Request_response_seller_database as DB
-from handlers.request_response_seller.response_seller import Response_seller
+from database.request_response_seller.request_response_seller import RequestResponseSellerDatabase as DB
+from handlers.request_response_seller.response_seller import ResponseSeller
 import asyncio
 import hashlib
 
-class Request_seller:
+class RequestSeller:
 
     async def set_request_seller(self, id_buyer: int, id_seller: list, name_product: str, date_request: str, category: str, photo: str)->None:
         """
@@ -43,7 +43,7 @@ class Request_seller:
             await DB().set_auto_request(response_db, query_seller)
         else:
             await DB().set_request_seller(query_seller)
-            await Response_seller().send_message_seller(query_seller['id_seller'])
+            await ResponseSeller().send_message_seller(query_seller['id_seller'])
             
 
     async def __ready_response(self, query_seller:dict)->dict:

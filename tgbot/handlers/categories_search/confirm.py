@@ -1,13 +1,13 @@
 from aiogram import types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.context import FSMContext
-from database.categories_product import Categories_product_database as DB_categories_product
-from handlers.base_handler_class import Steps_base
+from database.categories_product import CategoriesProductDatabase as DB_categories_product
+from handlers.base_handler_class import StepsBase
 from config_data.config import *
 from datetime import datetime
 import hashlib
 
-class Confirm (Steps_base):
+class Confirm (StepsBase):
     def __init__(self):
         name = 'confirm'
         module = 'categories_search'

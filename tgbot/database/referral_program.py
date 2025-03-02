@@ -1,6 +1,6 @@
 from database import base
 
-class Referral_database (base.Base_database):
+class ReferralDatabase (base.BaseDatabase):
 
     @staticmethod
     async def create_table():
@@ -20,12 +20,12 @@ class Referral_database (base.Base_database):
                 BALANCE BIGINT,
                 POTENtIAL_STATUS VARCHAR(100)
             )"""
-        await Referral_database.query_database(Referral_database(), query)
+        await ReferralDatabase.query_database(ReferralDatabase(), query)
 
     @staticmethod 
     async def add_referral(id_user, link, referrer_id):
         query = f"""INSERT INTO referral (USER_ID, LINK, REFERRER_ID, STATUS) VALUES ({id_user}, '{link}', {referrer_id}, 'ASSISTANT')"""
-        await Referral_database.query_database(Referral_database(), query)
+        await ReferralDatabase.query_database(ReferralDatabase(), query)
 
     @staticmethod
     async def get_tree_referral(id_user, max_level=8):
@@ -69,13 +69,13 @@ class Referral_database (base.Base_database):
                     rt.level < '{max_level}'
             )
             SELECT * FROM ReferralTree;"""
-        return await Referral_database.query_database(Referral_database(), query)
+        return await ReferralDatabase.query_database(ReferralDatabase(), query)
     
 
     @staticmethod
     async def get_data_user_ref_program(id_user):
         query = f"""SELECT * FROM referral WHERE USER_ID = {id_user}"""
-        return await Referral_database.query_database(Referral_database(), query)
+        return await ReferralDatabase.query_database(ReferralDatabase(), query)
     
     @staticmethod
     async def get_all_referrers(id_user):
@@ -113,7 +113,7 @@ class Referral_database (base.Base_database):
             INNER JOIN referral_tree rt ON r.USER_ID = rt.REFERRER_ID
         )
         SELECT * FROM referral_tree;"""
-        return await Referral_database.query_database(Referral_database(), query)
+        return await ReferralDatabase.query_database(ReferralDatabase(), query)
     
     @staticmethod
     async def update_data_ref_program_after_buy(all_referrers):
@@ -140,7 +140,7 @@ class Referral_database (base.Base_database):
         sql_update += f"{points_group_cases}, {points_sop_cases}, {points_cases}, {balance_cases} WHERE user_id IN ("
         sql_update += users_id_str +");"
 
-        await Referral_database.query_database(Referral_database(), sql_update)
+        await ReferralDatabase.query_database(ReferralDatabase(), sql_update)
 
     @staticmethod
     async def update_data_ref_program_after_bonus_calculate(all_referrers):
@@ -176,9 +176,9 @@ class Referral_database (base.Base_database):
         sql_update += f"{points_cases}, {group_points_cases}, {sop_cases}, {status_cases}, {last_status_cases}, {balance_cases}, {potential_status_cases} WHERE user_id IN ("
         sql_update += users_id_str + ");"
 
-        await Referral_database.query_database(Referral_database(), sql_update)
+        await ReferralDatabase.query_database(ReferralDatabase(), sql_update)
 
     @staticmethod
-    async def top_up_balance(id_user, balance):
+    async def update_balance(id_user, balance):
         query = f"""UPDATE referral SET balance = {balance} WHERE user_id = {id_user}"""
-        await Referral_database.query_database(Referral_database(), query)
+        await ReferralDatabase.query_database(ReferralDatabase(), query)

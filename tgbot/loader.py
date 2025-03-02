@@ -10,9 +10,6 @@ from handlers.sellers_survey import router as sellers_survey_router
 from handlers.referral_program import router as referral_program_router
 from handlers.balanced import router as balanced_router
 from handlers.request_response_seller import managment_request_response
-from aiogram.filters.command import Command
-from aiogram import types
-
 
 
 bot = Bot(BOT_TOKEN, parse_mode="HTML")
@@ -27,5 +24,5 @@ dp.include_router(router=sellers_survey_router.seller_survey_router)
 dp.include_router(router=referral_program_router.referral_program_router)
 dp.include_router(router=balanced_router.balanced_router)
 dp.include_router(router=managment_request_response.router_request_response)
-managment_request_response.Request_response_manager.initRouter()
+managment_request_response.RequestResponseManager.initRouter()
 

@@ -1,6 +1,6 @@
-from database.categories_product import Categories_product_database as DB_categories
+from database.categories_product import CategoriesProductDatabase as DB_categories
 
-class Search_categories_modules:
+class SearchCategoriesModules:
     def __init__(self):
         self.search_query = None  
         self.ar_categories = []

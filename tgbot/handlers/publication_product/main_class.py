@@ -2,9 +2,9 @@ from aiogram import types
 from aiogram.fsm.context import FSMContext
 from config_data.config import *
 
-from handlers.base_handler_class import Base_hanler
+from handlers.base_handler_class import BaseHandler
 
-class Publication_product (Base_hanler):
+class PublicationProduct (BaseHandler):
 
     @staticmethod
     async def back_publication_product(call : types.CallbackQuery, state : FSMContext):

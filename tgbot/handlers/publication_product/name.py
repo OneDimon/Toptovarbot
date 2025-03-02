@@ -1,12 +1,12 @@
 from aiogram import types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.context import FSMContext
-from database.prouct import Product_database as DB_product
-from handlers.base_handler_class import  Steps_base
+from database.prouct import ProductDatabase as DB_product
+from handlers.base_handler_class import  StepsBase
 from config_data.config import *
 
 
-class Name (Steps_base):
+class Name (StepsBase):
     def __init__(self):
         name = 'name'
         module = 'publication_product'
@@ -29,7 +29,7 @@ class Name (Steps_base):
         return True
     
     async def _initialize_publication_product_data_state(self, call: types.CallbackQuery, state: FSMContext):
-        from database.categories_product import Categories_product_database
+        from database.categories_product import CategoriesProductDatabase
         data_state = await state.get_data()
         data_state['publication_product_name'] = None
         data_state['publication_product_description'] = None
@@ -38,7 +38,7 @@ class Name (Steps_base):
         data_state['publication_product_category_two_level'] = None
         data_state['publication_product_category_three_level'] = None
         data_state['publication_product_photo'] = None
-        all_categories = await Categories_product_database.get_all_categories()
+        all_categories = await CategoriesProductDatabase.get_all_categories()
         data_state['all_categories'] = all_categories
         await state.update_data(data_state)
         

@@ -5,7 +5,7 @@ import psycopg2
 from psycopg2 import Error
 from config_data.config import *
 
-class Base_database():
+class BaseDatabase():
     async def query_database(self, query, my_error = False):
         result = False
         try:

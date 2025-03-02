@@ -1,10 +1,10 @@
 from aiogram import types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.context import FSMContext
-from handlers.base_handler_class import Steps_base
+from handlers.base_handler_class import StepsBase
 from config_data.config import *
 
-class Name_product(Steps_base):
+class NameProduct(StepsBase):
     def __init__(self):
         name = 'name_product'
         module = 'seller_survey'

@@ -3,10 +3,10 @@ from aiogram.filters.command import Command
 from aiogram import types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.context import FSMContext
-from database.users import Users_database as DB_users
-from database.referral_program import Referral_database as DB_referral
-from handlers.location.location_class import Location, Location_name
-from handlers.base_handler_class import Base_hanler
+from database.users import UsersDatabase as DB_users
+from database.referral_program import ReferralDatabase as DB_referral
+from handlers.location import Location, Name
+from handlers.base_handler_class import BaseHandler
 from config_data.config import *
 from aiogram import types
 from aiogram.types import BotCommand, BotCommandScopeDefault
@@ -14,7 +14,7 @@ from aiogram import Bot
 
 
 
-class User (Base_hanler):
+class User (BaseHandler):
     @staticmethod
     async def start(start : types.Message, state : FSMContext):
         await state.clear()
@@ -49,17 +49,17 @@ class User (Base_hanler):
 
     @staticmethod
     async def seller(seller : types.CallbackQuery|types.Message, state : FSMContext):
-        from handlers.contacts import contacts_class
+        from handlers.contacts import Contacts
         from handlers.organization import organization_class
         await state.clear()
         if_location = await Location.if_location(seller.from_user.id)
-        if_contact = await contacts_class.Contacts.if_contacts(seller.from_user.id)
+        if_contact = await Contacts.if_contacts(seller.from_user.id)
         if_organization = await organization_class.Organization.if_organization(seller.from_user.id)
         if not if_location:
-            await Location_name().start_of_step(seller, state)
+            await Name().start_of_step(seller, state)
             return
         elif not if_contact:
-            await contacts_class.Contacts().contacts_menu(seller, state)
+            await Contacts().contacts_menu(seller, state)
             return
         elif not if_organization:
             await organization_class.Organization().start_of_step(seller, state)
@@ -81,10 +81,10 @@ class User (Base_hanler):
 
     @staticmethod
     async def profile(call : types.CallbackQuery, state : FSMContext):
-        from handlers.contacts import contacts_class
+        from handlers.contacts import Contacts
         from handlers.location.location_class import Location
         userData = await User._search_user(call.from_user.id)  
-        contacts_all = await contacts_class.Contacts.get_all_contacts(call.from_user.id)    
+        contacts_all = await Contacts.get_all_contacts(call.from_user.id)    
         Location_data = await Location.get_location(call.from_user.id)    
         text_profile = await User.__get_text_profile(userData, contacts_all, Location_data[0])   
         inline_builder = await User.__get_inline_keyboard_profile()        
@@ -237,10 +237,10 @@ class User (Base_hanler):
     async def __get_seller_menu():
         builder = InlineKeyboardBuilder()
         builder.row(types.InlineKeyboardButton(
-            text="📺 Посмотреть канал", url="https://t.me/optovi4ekchannel")
+            text="📺 Посмотреть тестовый канал", url="https://t.me/tovartest ")
         )
         builder.row(types.InlineKeyboardButton(
-            text="📺 Посмотреть тестовый канал", url="https://t.me/tovartest ")
+            text="📺 Посмотреть канал", url="https://t.me/optovi4ekchannel")
         )
         builder.add(types.InlineKeyboardButton(
             text="👥 Профиль", callback_data="profile")
@@ -263,7 +263,7 @@ class User (Base_hanler):
         builder.row(types.InlineKeyboardButton(
             text="👫 Реферальная программа", callback_data="referral_program")
         )
-        builder.row(types.InlineKeyboardButton(text="💸 перейти к пополнению баланса", callback_data="balance_menu"))
+        builder.row(types.InlineKeyboardButton(text="💸 перейти к балансу", callback_data="balance_menu"))
         builder.row(types.InlineKeyboardButton(
             text="🔙 Основное меню", callback_data="main_menu")
         )
@@ -276,12 +276,12 @@ class User (Base_hanler):
             text="📊 Опросить продавцов онлайн", callback_data="seller_survey")
         )
         builder.row(types.InlineKeyboardButton(
-            text="📰 Новинки в канале",
-            url="https://t.me/optovi4ekchannel")
-        )
-        builder.row(types.InlineKeyboardButton(
             text="📰 Новинки в тестовом канале",
             url="https://t.me/tovartest")
+        )
+        builder.row(types.InlineKeyboardButton(
+            text="📰 Новинки в канале",
+            url="https://t.me/optovi4ekchannel")
         )
         builder.add(types.InlineKeyboardButton(
             text="👥 Продавцы по категориям", callback_data="categories_search")
@@ -298,7 +298,7 @@ class User (Base_hanler):
         builder.row(types.InlineKeyboardButton(
             text="👫 Реферальная программа", callback_data="referral_program")
         )
-        builder.row(types.InlineKeyboardButton(text="💸 перейти к пополнению баланса", callback_data="balance_menu"))
+        builder.row(types.InlineKeyboardButton(text="💸 перейти к балансу", callback_data="balance_menu"))
         builder.row(types.InlineKeyboardButton(
             text="🔙 Назад", callback_data="main_menu") 
         )

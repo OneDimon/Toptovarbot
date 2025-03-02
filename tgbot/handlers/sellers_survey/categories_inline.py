@@ -1,12 +1,12 @@
 from aiogram import types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.context import FSMContext
-from handlers.base_handler_class import Steps_base
+from handlers.base_handler_class import StepsBase
 from config_data.config import *
 from aiogram.types import InlineQueryResultArticle, InputTextMessageContent
-from modules.search_categories_module import Search_categories_modules
+from modules.search_categories_module import SearchCategoriesModules
 
-class Categories_inline (Steps_base):
+class CategoriesInline (StepsBase):
     def __init__(self):
         name = 'categories_inline'
         module = 'seller_survey'
@@ -30,7 +30,7 @@ class Categories_inline (Steps_base):
 
     async def _process_inline_query(self, inline: types.InlineQuery):
         query_text = inline.query
-        categories = await Search_categories_modules().search_categories(query_text)
+        categories = await SearchCategoriesModules().search_categories(query_text)
         results = []
         for categorie in categories:
             results.append(
@@ -71,7 +71,7 @@ class Categories_inline (Steps_base):
             await self.start_of_step(message, state)
 
     async def _go_to_next_step(self, message: types.Message, state: FSMContext): 
-        from . import Confirm_category
-        await Confirm_category().start_of_step(message, state)
+        from . import ConfirmCategory
+        await ConfirmCategory().start_of_step(message, state)
 
 

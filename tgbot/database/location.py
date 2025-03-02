@@ -1,7 +1,7 @@
 from database import base
 
 
-class Location_database(base.Base_database):
+class LocationDatabase(base.BaseDatabase):
 
     @staticmethod
     async def create_table_location()->None:
@@ -22,12 +22,12 @@ class Location_database(base.Base_database):
                     PHOTO VARCHAR(100),
                     FOREIGN KEY (USER_ID) REFERENCES users (USER_ID)); """
         
-        await Location_database.query_database(Location_database(), query)
+        await LocationDatabase.query_database(LocationDatabase(), query)
 
     @staticmethod
     async def get_location(user_id : int) -> list:
         query = f"""SELECT * FROM location WHERE USER_ID = {user_id}"""
-        return await Location_database.query_database(Location_database(), query)
+        return await LocationDatabase.query_database(LocationDatabase(), query)
     
     @staticmethod
     async def add_location(user_id : int, name_of_place : str, sector : str, building : str, floar : int, line : str, place : str, address : str, photo : str) -> None:
@@ -49,7 +49,7 @@ class Location_database(base.Base_database):
                                         '{place}', 
                                         '{address}', 
                                         '{photo}')"""
-        await Location_database.query_database(Location_database(), query)
+        await LocationDatabase.query_database(LocationDatabase(), query)
 
     @staticmethod
     async def update_location(id : int, name_of_place : str, sector : str, building : str, floar : int, line : str, place : str, address : str, photo : str) -> None:
@@ -62,4 +62,4 @@ class Location_database(base.Base_database):
                                             ADDRESS = '{address}',
                                             PHOTO = '{photo}'
                                             WHERE ID = {id}"""
-        await Location_database.query_database(Location_database(), query)
+        await LocationDatabase.query_database(LocationDatabase(), query)

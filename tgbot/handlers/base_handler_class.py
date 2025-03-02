@@ -2,12 +2,12 @@ from aiogram.filters.command import Command
 from aiogram import types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.context import FSMContext
-from database.users import Users_database as DB_users
-from database.location import Location_database as DB_location
+from database.users import UsersDatabase as DB_users
+from database.location import LocationDatabase as DB_location
 from states import states
 from abc import ABC, abstractmethod
 
-class Base_hanler:
+class BaseHandler:
 
     @staticmethod
     async def mssage_answer(event : types.CallbackQuery|types.Message|types.BotCommand, 
@@ -41,16 +41,15 @@ class Base_hanler:
         await state.update_data(data_state)
 
     @staticmethod
-    async def get_state_object(name_state: str, name_state_group: str, modele: __module__): 
-        try:
-            state_group = getattr(modele, name_state_group)
-            state = getattr(state_group, name_state)
-            return state
-        except Exception as e:
-            print(e)
+    async def get_state_object(name_state: str, name_state_group: str, module: __module__): 
+        name_state_group = ''.join(word.capitalize() for word in name_state_group.split('_'))
+        state_group = getattr(module, name_state_group)
+        state = getattr(state_group, name_state)
+        return state
+
         
 
-class steps_interface(ABC):
+class StepsInterface(ABC):
 
     @abstractmethod
     async def start_of_step(self ,call : types.CallbackQuery|types.Message, state : FSMContext):
@@ -61,7 +60,7 @@ class steps_interface(ABC):
         pass
         
 
-class Steps_base (Base_hanler, steps_interface):
+class StepsBase (BaseHandler, StepsInterface):
 
     def __init__(self, name : str = 'base_step', module : str = 'base'):
         self.name = name
@@ -73,7 +72,7 @@ class Steps_base (Base_hanler, steps_interface):
         if stop_func == True:
             return
 
-        new_state = await Base_hanler.get_state_object(self.name, self.module, states)
+        new_state = await BaseHandler.get_state_object(self.name, self.module, states)
         await state.set_state(new_state)
 
         await self._save_step_in_state(call, state)
@@ -108,7 +107,7 @@ class Steps_base (Base_hanler, steps_interface):
     async def _send_a_question(self, call : types.CallbackQuery|types.Message, state : FSMContext):
         builder = await self._get_builder_inline_keyboard_for_question(call, state)
         text = await self._get_text_for_question(call, state)
-        message_id = await Base_hanler.mssage_answer(call, text, builder.as_markup())
+        message_id = await BaseHandler.mssage_answer(call, text, builder.as_markup())
         return message_id
     
     async def _save_message_id(self, message_id, call : types.CallbackQuery|types.Message, state : FSMContext):
@@ -117,7 +116,7 @@ class Steps_base (Base_hanler, steps_interface):
         await state.update_data(data_state)
 
     async def _save_answer_data(self, call : types.CallbackQuery|types.Message, state : FSMContext):
-        await Base_hanler.update_data_state(call, state, f'{self.module}_{self.name}')
+        await BaseHandler.update_data_state(call, state, f'{self.module}_{self.name}')
 
     async def _go_to_next_step(self, call : types.CallbackQuery, state : FSMContext):
         pass
