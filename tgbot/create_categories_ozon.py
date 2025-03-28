@@ -1,22 +1,22 @@
 import sys
 import os
 sys.path.append(os.getcwd())
-from database.request_response_seller.request_response_seller import RequestResponseSellerDatabase as rss_db
-from handlers.request_response_seller.response_seller import ResponseSeller
-from handlers.request_response_seller import managment_request_response
-from handlers.request_response_seller.request_seller import RequestSeller
-from handlers.referral_program import Menu
+from database.seller.request_response_seller.request_response_seller import RequestResponseSellerDatabase as rss_db
+from handlers.seller.request_response_seller.response_seller import ResponseSeller
+from handlers.seller.request_response_seller import managment_request_response
+from handlers.seller.request_response_seller.request_seller import RequestSeller
+from handlers.general.referral_program import menu as Menu
 from modules.referral_calculation import ref_tree
 import asyncio
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from datetime import datetime, timedelta
-from database.users import UsersDatabase as DB_users
-from database.location import LocationDatabase as DB_location
-from database.contacts import ContactsDatabase as DB_contacts
-from database.prouct import ProductDatabase as DB_products
-from database.categories_product import CategoriesProductDatabase as DB_categories
-from database.referral_program import ReferralDatabase as DB_referral
+from database.general.users import UsersDatabase as DB_users
+from database.seller.location_seller import LocationSellerDatabase as DB_location
+from database.seller.contacts import ContactsDatabase as DB_contacts
+from database.seller.product import ProductDatabase as DB_products
+from database.system.categories_product import CategoriesProductDatabase as DB_categories
+from database.general.referral_program import ReferralDatabase as DB_referral
 
 from states import states
 import random

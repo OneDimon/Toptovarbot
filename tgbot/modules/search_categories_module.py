@@ -1,4 +1,4 @@
-from database.categories_product import CategoriesProductDatabase as DB_categories
+from database.system.categories_product import CategoriesProductDatabase as DB_categories
 
 class SearchCategoriesModules:
     def __init__(self):
@@ -58,6 +58,6 @@ class SearchCategoriesModules:
         category_with_hash = []
         for category in categories:
             category = list(category)
-            category.append(hashlib.sha256(str(category).encode('utf-8')).hexdigest()[:64])
+            category['hash'] = hashlib.sha256(str(category).encode('utf-8')).hexdigest()[:64]
             category_with_hash.append(tuple(category))
         return category_with_hash

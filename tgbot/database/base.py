@@ -4,27 +4,34 @@ sys.path.append(os.getcwd())
 import psycopg2
 from psycopg2 import Error
 from config_data.config import *
+from psycopg2.extras import RealDictCursor
 
 class BaseDatabase():
-    async def query_database(self, query, my_error = False):
+    async def query_database(self, query, *params, my_error = False):
         result = False
         try:
-            result = await self.__query_database(query)
+            result = await self.__query_database(query, *params)
         except (Exception, Error) as error:
             await self.__exeption_database(error)
         finally:
             await self.__finally_database(result)
             return result  
 
-    async def __query_database(self, query):
+    async def __query_database(self, query, *params):
         record = False
         connection = psycopg2.connect(user=USER,
                                       password=PASSWORD,
                                       host=HOST,
                                       port=PORT,
                                       database=DATABASE)
-        cursor = connection.cursor()
-        cursor.execute(query)
+        cursor = connection.cursor(cursor_factory=RealDictCursor)
+        
+        # Используем параметризованный запрос для предотвращения SQL-инъекций
+        if params:
+            cursor.execute(query, params)
+        else:
+            cursor.execute(query)
+            
         connection.commit()
         if ("SELECT" in query):
             record = cursor.fetchall()

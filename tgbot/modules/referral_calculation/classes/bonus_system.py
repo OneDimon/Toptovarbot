@@ -1,7 +1,7 @@
 from .director_tree import DirectorTree
 from .ref_node import RefNode
-from database.referral_program import ReferralDatabase as DB_referral
-from database.system_info import SystemInfoDatabase as DB_system
+from database.general.referral_program import ReferralDatabase as DB_referral
+from database.system.system_info import SystemInfoDatabase as DB_system
 
 class BonusSystem:
     def __init__(self, director_tree: DirectorTree) -> None:

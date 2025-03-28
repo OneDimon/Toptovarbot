@@ -1,4 +1,4 @@
-from database.system_info import SystemInfoDatabase
+from database.system.system_info import SystemInfoDatabase
 import asyncio
 
 async def main():

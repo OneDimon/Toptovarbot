@@ -1,4 +1,4 @@
-from database.referral_program import ReferralDatabase as DB_referral
+from database.general.referral_program import ReferralDatabase as DB_referral
 from .ref_node import RefNode
 class RefTree:
 

@@ -3,14 +3,17 @@ import os
 sys.path.append(os.getcwd())
 from database.request_response_seller.request_response_seller import RequestResponseSellerDatabase as rss_db
 import asyncio
-from database.users import UsersDatabase as DB_users
-from database.location import LocationDatabase as DB_location
-from database.contacts import ContactsDatabase as DB_contacts
-from database.prouct import ProductDatabase as DB_products
-from database.categories_product import CategoriesProductDatabase as DB_categories
-from database.referral_program import ReferralDatabase as DB_referral
-from database.history_transaction import HistoryTransactionDatabase as DB_history
-from database.system_info import SystemInfoDatabase as SystemInfoDatabase
+from database.general.users import UsersDatabase as DB_users
+from database.seller.location_seller import LocationSellerDatabase as DB_location
+from database.seller.contacts import ContactsDatabase as DB_contacts
+from database.seller.product import ProductDatabase as DB_products
+from database.system.categories_product import CategoriesProductDatabase as DB_categories
+from database.general.referral_program import ReferralDatabase as DB_referral
+from database.general.history_transaction import HistoryTransactionDatabase as DB_history
+from database.system.system_info import SystemInfoDatabase as SystemInfoDatabase
+from database.loader.location_loader import LocationLoaderDatabase as DB_location_loader
+from database.loader.confirm_location_seller import ConfirmLocationSellerDatabase as DB_confirm_location_seller
+
 async def main():
     await DB_users.create_table_user()
     await DB_users.add_user(1, 'root')
@@ -25,6 +28,10 @@ async def main():
     await DB_referral.create_table()
     await DB_history.create_table()
     await SystemInfoDatabase.create_table()
+    await DB_location_loader.create_table_location_loader()
+    await DB_confirm_location_seller.create_table_confirm_location_seller()
     if not await SystemInfoDatabase.get_system_info('system_balance'):
         await SystemInfoDatabase.update_system_balance()
-asyncio.run(main())
+
+if __name__ == "__main__":
+    asyncio.run(main())

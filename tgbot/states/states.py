@@ -17,10 +17,20 @@ class Location(StatesGroup):
     photo = State()
     description = State()
 
+class LocationLoader(StatesGroup):
+    name = State()
+    sector = State()
+    building = State()
+    floar = State()
+    line = State()
+    address = State()
+    name = State()
+    description = State()
+
 class Contacts(StatesGroup):
     telegram = State()
     whatsapplink = State()
-    admin_vk_link = State()
+    adminvklink = State()
     add = State()
     edit = State()
     delete = State()
@@ -56,3 +66,14 @@ class Balance(StatesGroup):
     top_up = State()
     out = State()
     transaction_history = State()
+
+class ConfirmLocationSeller(StatesGroup):
+    inline = State()
+    photo = State()
+    name = State()
+    contact = State()
+    text_address = State()
+    comment_loader = State()
+
+class Admin(StatesGroup):
+    rejection_comment = State()
