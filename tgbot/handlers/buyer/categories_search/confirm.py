@@ -25,10 +25,6 @@ class Confirm (StepsBase):
         builder.row(types.InlineKeyboardButton(text="✅ Подтвердить", callback_data="confirm_categories_search"))
         return builder
     
-    async def _go_to_next_step(self, call: types.CallbackQuery | types.Message, state: FSMContext):
-        from handlers.general.user.user_class import User
-        await User.buyer(call, state)
-
     async def _save_answer_data(self, call: types.CallbackQuery | types.Message, state: FSMContext):
         await self.__set_result_search_in_database(call, state)
         await self.__response_finish(call, state)
@@ -38,7 +34,7 @@ class Confirm (StepsBase):
         ar_user_id_from_categories = await DB_categories_product.get_user_id_from_categories(data_state['categories_search_category_one_level'], 
                                                                                              data_state['categories_search_category_two_level'],
                                                                                              data_state['categories_search_category_three_level'])
-        str_users_id = ','.join([str(x[0]) for x in ar_user_id_from_categories])
+        str_users_id = ','.join([str(x['user_id']) for x in ar_user_id_from_categories])
         date_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         hash = hashlib.md5((str(date_str) + str_users_id).encode('utf-8')).hexdigest()
         data_state['hash_categories_search'] = hash

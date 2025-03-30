@@ -12,6 +12,7 @@ class AdminMenu(BaseHandler):
     async def get_markup_admin_menu():
         markup = InlineKeyboardBuilder()
         markup.row(types.InlineKeyboardButton(text="Подтверждение локаций", callback_data="admin_location_confirmations"))
+        markup.row(types.InlineKeyboardButton(text="В главное меню", callback_data="main_menu"))
         return markup.as_markup()
 
     @staticmethod

@@ -17,23 +17,7 @@ class TextAddress (StepsBase):
         builder = InlineKeyboardBuilder()
         builder.row(types.InlineKeyboardButton(text="⬅️ Назад", callback_data="back_confirm_location_seller"))
         return builder
-
-    async def _before_get_answer(self, message: types.Message, state: FSMContext):
-        """Валидация введенного адреса (опционально)"""
-        # Здесь можно добавить валидацию, если необходимо
-        # В текущей реализации просто пропускаем любой текст
-        text_address = message.text.strip()
-        if not text_address:
-            await message.answer("Пожалуйста, введите текстовый адрес")
-            return True
-        return False
         
-    async def _save_answer_data(self, message: types.Message, state: FSMContext):
-        """Сохраняем введенный адрес в состояние"""
-        data_state = await state.get_data()
-        data_state[self.key_data_in_state] = message.text.strip()
-        await state.update_data(data_state)
-
     async def _go_to_next_step(self, message: types.Message, state: FSMContext): 
         """Переходим к следующему шагу - загрузке фото"""
         from . import Photo

@@ -68,12 +68,14 @@ class Balance(StatesGroup):
     transaction_history = State()
 
 class ConfirmLocationSeller(StatesGroup):
-    inline = State()
     photo = State()
-    name = State()
-    contact = State()
+    name_seller = State()
     text_address = State()
-    comment_loader = State()
+    comment = State()
 
 class Admin(StatesGroup):
     rejection_comment = State()
+
+class LocationConfirmation(StatesGroup):
+    confirmation = State()
+    comment = State()

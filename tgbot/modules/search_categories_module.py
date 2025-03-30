@@ -14,23 +14,24 @@ class SearchCategoriesModules:
     async def filter_categories(self, search_query: str) -> list:
         filtered_categories = []
         for item in self.ar_categories:
-            new_item = []
+            new_item = {}
             for field in item:
-                field = str(field).lower()
-                if isinstance(field, str) and (search_query.lower() in field.lower() or search_query.lower() == field.lower()):
-                    highlighted = field.replace(
+                field_value = item[field]
+                field_value = str(field_value).lower()
+                if isinstance(field_value, str) and (search_query.lower() in field_value.lower() or search_query.lower() == field_value.lower()):
+                    highlighted = field_value.replace(
                         search_query, search_query.upper()
                     )
-                    new_item.append(highlighted)
+                    new_item[field] = highlighted
                 else:
-                    new_item.append(field)
+                    new_item[field] = field_value
             # Проверяем, есть ли совпадение хотя бы в одном поле
-            if any(search_query.lower() in str(field).lower() for field in item):
-                filtered_categories.append(tuple(new_item))
+            if any(search_query.lower() in str(field).lower() for field in item.values()):
+                filtered_categories.append(new_item)
 
         sorted_categories = sorted(filtered_categories, key=lambda x: self.sort_categories(x, search_query))
-        sortet_categories_with_hash = await self.add_hash_to_categories(sorted_categories)
-        return sortet_categories_with_hash[:50]
+        sortet_categories_with_hash = await self.add_hash_to_categories(sorted_categories[:50])
+        return sortet_categories_with_hash
     
     def sort_categories(self, item: str, search_query: str) -> list:
         """
@@ -57,7 +58,6 @@ class SearchCategoriesModules:
         import hashlib
         category_with_hash = []
         for category in categories:
-            category = list(category)
             category['hash'] = hashlib.sha256(str(category).encode('utf-8')).hexdigest()[:64]
-            category_with_hash.append(tuple(category))
+            category_with_hash.append(category)
         return category_with_hash

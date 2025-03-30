@@ -1,0 +1,1 @@
+ALTER TABLE confirm_location_seller ADD COLUMN confirmed boolean DEFAULT false NOT NULL;

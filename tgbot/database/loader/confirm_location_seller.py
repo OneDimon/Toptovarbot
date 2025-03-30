@@ -29,7 +29,7 @@ class ConfirmLocationSellerDatabase(base.BaseDatabase):
         await ConfirmLocationSellerDatabase.query_database(ConfirmLocationSellerDatabase(), query)
 
     @staticmethod
-    async def get_seller_data(contact_or_name_seller: str) -> list:
+    async def get_seller_data(contact_or_name_seller: str) -> dict | None:
         query = """SELECT 
                 u.user_id AS id,
                 u.city,
@@ -59,15 +59,15 @@ class ConfirmLocationSellerDatabase(base.BaseDatabase):
             LEFT JOIN 
                 public.location l ON u.user_id = l.user_id
             WHERE 
-                c.contacts = %s OR u.name = %s"""
-        all_data = await ConfirmLocationSellerDatabase.query_database(
-            ConfirmLocationSellerDatabase(), 
+                c.contacts = %s OR u.name = %s
+            LIMIT 1"""  # Ограничиваем одну запись
+
+        all_data = await ConfirmLocationSellerDatabase().query_database(
             query, 
-            (contact_or_name_seller, contact_or_name_seller)
+            contact_or_name_seller, contact_or_name_seller  # Два параметра
         )
-        if not all_data:
-            return None
-        return all_data[0]
+        
+        return all_data[0] if all_data else None
     
     @staticmethod
     async def add_confirm_location_seller(seller_id: int, loader_id: int, text_address: str, comment_loader: str, photo: str) -> None:
@@ -87,7 +87,7 @@ class ConfirmLocationSellerDatabase(base.BaseDatabase):
         await ConfirmLocationSellerDatabase.query_database(
             ConfirmLocationSellerDatabase(), 
             query, 
-            (seller_id, loader_id, text_address, comment_loader, photo)
+            seller_id, loader_id, text_address, comment_loader, photo
         )
     
     @staticmethod
@@ -117,7 +117,7 @@ class ConfirmLocationSellerDatabase(base.BaseDatabase):
             )
     
     @staticmethod
-    async def check_confirmation(confirmation_id: int, checked: bool = True, confirmind_id: int = None, comment_admin: str = None) -> None:
+    async def check_confirmation(confirmation_id: int, checked: bool = True, confirmind_id: int = None, confirmed: bool = False,  comment_admin: str = None) -> None:
         """
         Отмечает подтверждение местоположения продавца как проверенное.
         
@@ -127,12 +127,12 @@ class ConfirmLocationSellerDatabase(base.BaseDatabase):
         :param comment_admin: Комментарий администратора
         """
         query = """UPDATE confirm_location_seller 
-                  SET CHECKED = %s, CONFIRMIND_ID = %s, COMMENT_ADMIN = %s 
+                  SET CHECKED = %s, CONFIRMIND_ID = %s, COMMENT_ADMIN = %s, CONFIRMED = %s 
                   WHERE ID = %s"""
         await ConfirmLocationSellerDatabase.query_database(
             ConfirmLocationSellerDatabase(), 
             query, 
-            (checked, confirmind_id, comment_admin, confirmation_id)
+        checked, confirmind_id, comment_admin, confirmed, confirmation_id
         )
     
     @staticmethod
@@ -147,7 +147,7 @@ class ConfirmLocationSellerDatabase(base.BaseDatabase):
         result = await ConfirmLocationSellerDatabase.query_database(
             ConfirmLocationSellerDatabase(), 
             query, 
-            (confirmation_id,)
+            confirmation_id
         )
         return result[0] if result else None
     

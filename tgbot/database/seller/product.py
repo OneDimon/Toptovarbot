@@ -24,15 +24,15 @@ class ProductDatabase (base.BaseDatabase):
     @staticmethod
     async def get_product_by_user(id_user):
         query = """SELECT * FROM product WHERE USER_ID = %s"""
-        return await ProductDatabase.query_database(ProductDatabase(), query, (id_user,))
+        return await ProductDatabase.query_database(ProductDatabase(), query, id_user)
     
     @staticmethod
     async def get_product_by_user_and_date(id_user, date):
         query = """SELECT * FROM product WHERE USER_ID = %s AND DATE_PUBLICATION = %s"""
-        return await ProductDatabase.query_database(ProductDatabase(), query, (id_user, date))
+        return await ProductDatabase.query_database(ProductDatabase(), query, id_user, date)
     
     @staticmethod
     async def publication_product(id_user, name, description, price, category, category_two, category_three, photo):
         query = """INSERT INTO product (USER_ID, NAME, DESCRIPTION, CATEGORY, CATEGORY_TWO, CATEGORY_THREE, PRICE, PHOTO, DATE_PUBLICATION)
                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, NOW())"""
-        await ProductDatabase.query_database(ProductDatabase(), query, (id_user, name, description, category, category_two, category_three, price, photo))
+        await ProductDatabase.query_database(ProductDatabase(), query, id_user, name, description, category, category_two, category_three, price, photo)

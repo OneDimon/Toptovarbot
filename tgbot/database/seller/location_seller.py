@@ -27,7 +27,7 @@ class LocationSellerDatabase(base.BaseDatabase):
     @staticmethod
     async def get_location(user_id : int) -> list:
         query = """SELECT * FROM location WHERE USER_ID = %s"""
-        all_data = await LocationSellerDatabase.query_database(LocationSellerDatabase(), query, (user_id,))
+        all_data = await LocationSellerDatabase.query_database(LocationSellerDatabase(), query, user_id)
         if all_data == []:
             return None
         return all_data[0]
@@ -45,7 +45,7 @@ class LocationSellerDatabase(base.BaseDatabase):
                                             PHOTO) 
                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
         await LocationSellerDatabase.query_database(LocationSellerDatabase(), query, 
-                                                   (user_id, name_of_place, sector, building, floar, line, place, address, photo))
+                                                   user_id, name_of_place, sector, building, floar, line, place, address, photo)
 
     @staticmethod
     async def update_location(id : int, name_of_place : str, sector : str, building : str, floar : int, line : str, place : str, address : str, photo : str) -> None:
@@ -59,4 +59,4 @@ class LocationSellerDatabase(base.BaseDatabase):
                                             PHOTO = %s
                                             WHERE ID = %s"""
         await LocationSellerDatabase.query_database(LocationSellerDatabase(), query, 
-                                                   (name_of_place, sector, building, floar, line, place, address, photo, id))
+                                                   name_of_place, sector, building, floar, line, place, address, photo, id)

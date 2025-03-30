@@ -146,6 +146,11 @@ class User (BaseHandler):
         await call.answer(text)
 
     @staticmethod
+    async def if_admin(user_id : int):
+        user_info = await DB_users.get_user_from_user_id(user_id)
+        return user_info['rights'] == 'admin'
+    
+    @staticmethod
     async def _search_user(user_id : int):
         user_data = await DB_users.get_user_from_user_id(user_id)
         if not user_data:
@@ -248,6 +253,10 @@ class User (BaseHandler):
         builder.row(types.InlineKeyboardButton(
             text="🚚 Грузчик", callback_data="loader")
         )
+        if (await User.if_admin(start.from_user.id)):
+            builder.row(types.InlineKeyboardButton(
+                text="👑 Админ", callback_data="admin")
+        )
         await User.message_answer(start, "Вы вошли как <b>Продавец</b> или <b>Покупатель</b>?", builder.as_markup())
 
 
@@ -315,7 +324,7 @@ class User (BaseHandler):
             text="👫 Реферальная программа", callback_data="referral_program")
         )
         builder.row(types.InlineKeyboardButton(
-            text="👫 Подтвердить локацию продавца", callback_data="confirm_seller_location")
+            text="👫 Подтвердить локацию продавца", callback_data="confirm_location_seller")
         )
         builder.row(types.InlineKeyboardButton(text="💸 перейти к балансу", callback_data="balance_menu"))
         builder.row(types.InlineKeyboardButton(

@@ -61,56 +61,9 @@ class Photo (StepsBase):
         data_state[self.key_data_in_state] = file_path
         await state.update_data(data_state)
 
-    async def _after_get_answer(self, call: types.Message, state: FSMContext):
-        """Обработка после получения ответа"""
-        await self.__response_finish(call, state)
-        await self.__save_attemt_confirm(call, state)
+    async def _go_to_next_step(self, call: types.Message, state: FSMContext):
+        from . import Comment
+        await Comment().start_of_step(call, state)
 
-    async def __response_finish(self, call: types.Message, state: FSMContext):
-        """Отправка сообщения об успешном завершении процесса"""
-        text = await self.__get_respronse_finish_text() 
-        keyboard = await self.__get_inline_keyboard_for_finish(call, state)
-        await self.message_answer(call, text, keyboard)
-
-    async def __get_respronse_finish_text(self):
-        """Получение текста сообщения об успешном завершении"""
-        return "Адрес принят на проверку. Благодарим за содействие!"
-    
-    async def __get_inline_keyboard_for_finish(self, call: types.Message, state: FSMContext):
-        """Клавиатура для завершающего сообщения"""
-        builder = InlineKeyboardBuilder()
-        builder.row(types.InlineKeyboardButton(text="🏠 В главное меню", callback_data="main_menu"))
-        return builder.as_markup()
-
-    async def __save_attemt_confirm(self, call: types.Message, state: FSMContext):
-        """Сохранение данных подтверждения местоположения продавца в базу данных"""
-        from database.loader.confirm_location_seller import ConfirmLocationSellerDatabase as DB
-        data_state = await state.get_data()
-        
-        # Проверяем наличие всех необходимых данных
-        if not all(key in data_state for key in ['seller_data', 'confirm_location_seller_text_address', 'confirm_location_seller_photo']):
-            # Если каких-то данных нет, получаем их из состояния или используем значения по умолчанию
-            seller_id = data_state.get('seller_data', {}).get('id', 0)
-            text_address = data_state.get('confirm_location_seller_text_address', '')
-            photo_path = data_state.get('confirm_location_seller_photo', '')
-            comment = data_state.get('confirm_location_seller_comment_loader', '')
-        else:
-            # Получаем данные из состояния
-            seller_id = data_state['seller_data']['id']
-            text_address = data_state['confirm_location_seller_text_address']
-            photo_path = data_state['confirm_location_seller_photo']
-            comment = data_state.get('confirm_location_seller_comment_loader', '')
-        
-        # Сохраняем данные в базу
-        await DB.add_confirm_location_seller(
-            seller_id,
-            call.from_user.id,
-            text_address,
-            comment,
-            photo_path
-        )
-        
-        # Очищаем состояние
-        await state.clear()
-        
+   
               
