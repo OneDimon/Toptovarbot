@@ -1,5 +1,4 @@
 from states.states import StateUser
-from aiogram.filters.command import Command
 from aiogram import types
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.context import FSMContext
@@ -10,7 +9,7 @@ from config_data.config import *
 from aiogram import types
 from aiogram.types import BotCommand, BotCommandScopeDefault
 from aiogram import Bot
-
+from globals.event_dispatcher import event_dispatcher
 
 
 class User (BaseHandler):
@@ -129,12 +128,14 @@ class User (BaseHandler):
     @staticmethod
     async def confirm_offerta(call : types.CallbackQuery, state : FSMContext):
         await DB_users.set_user_offerta(call.from_user.id, True)
+        await event_dispatcher.dispatch('new_set_offerta', call=call, state = state)
         await User.start_callback(call, state)
  
     @staticmethod
     async def set_t_phone(message : types.Message, state : FSMContext):
         await DB_users.set_t_phone(message.from_user.id, message.contact.phone_number)
         await User.message_answer(message, "Ваш контакт добавлен", reply_markup=types.ReplyKeyboardRemove())
+        await event_dispatcher.dispatch('new_set_t_phone', call=message, state = state)
         await User.start(message, state)
 
     @staticmethod
@@ -217,7 +218,11 @@ class User (BaseHandler):
         referral_link = LINK_BOT + "?start=" + str(start.from_user.id)
         await DB_users.add_user(start.from_user.id, start.from_user.full_name)
         await DB_referral.add_referral(start.from_user.id, referral_link, referer_id)
+
+        await event_dispatcher.dispatch('new_user_add', call=start, state = state)
+        
         await User.start(start, state)
+
 
     @staticmethod
     async def _get_offerta(start : types.Message, state : FSMContext):
@@ -258,7 +263,6 @@ class User (BaseHandler):
                 text="👑 Админ", callback_data="admin")
         )
         await User.message_answer(start, "Вы вошли как <b>Продавец</b> или <b>Покупатель</b>?", builder.as_markup())
-
 
     @staticmethod
     async def __get_seller_menu():

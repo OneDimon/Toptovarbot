@@ -40,6 +40,8 @@ class UsersDatabase(base.BaseDatabase):
         """
         query = """SELECT * FROM users WHERE USER_ID = %s"""
         all_result = await UsersDatabase.query_database(UsersDatabase(), query, user_id)
+        if all_result == []:
+            return None
         return all_result[0]
     
 
@@ -78,3 +80,8 @@ class UsersDatabase(base.BaseDatabase):
     async def set_t_phone(user_id : int, tfone : str):
         query = """UPDATE users SET TFONE = %s WHERE USER_ID = %s"""
         await UsersDatabase.query_database(UsersDatabase(), query, tfone, user_id)
+
+    @staticmethod 
+    async def set_property(user_id : int, property : str, value : str):
+        query = f"""UPDATE users SET {property} = %s WHERE USER_ID = %s"""
+        await UsersDatabase.query_database(UsersDatabase(), query, value, user_id)

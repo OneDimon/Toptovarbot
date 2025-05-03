@@ -2,6 +2,7 @@ from aiogram import *
 from states.states import PublicationProduct as StatePublication_product
 from . import *
 from globals.logger_class import CustomLogger
+from aiogram.filters import StateFilter
 
 publication_product_router = Router()
 
@@ -13,7 +14,7 @@ publication_product_router.inline_query.register(CategoriesInline().get_answer, 
 publication_product_router.message.register(CategoriesInline().get_answer, StatePublication_product.categories_inline)
 publication_product_router.message.register(Price().get_answer, StatePublication_product.price)
 publication_product_router.message.register(Photo().get_answer, StatePublication_product.photo)
-publication_product_router.error.register(CustomLogger('logs/error_logs/publication_product.log').loging_hanlder_errors)
+publication_product_router.error.register(CustomLogger('logs/error_logs/seller/publication_product.log').loging_hanlder_errors, StateFilter(StatePublication_product))
 
 
 

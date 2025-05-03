@@ -3,10 +3,9 @@ import sys
 import asyncio
 import traceback
 from loguru import logger
+from globals.logger_class import CustomLogger
 import loader
-import handlers
-from aiogram import types
-from aiogram import types, Router
+
 
 # Логирование в файл
 logger.add('logs/error_logs/bot_errors.log', format="{time} | {level} | {message}", level="DEBUG", rotation="10 MB", compression="zip", backtrace=True, diagnose=True)
@@ -26,6 +25,8 @@ async def main():
     script_directory = os.path.dirname(os.path.abspath(__file__))
     os.chdir(script_directory)
     await loader.dp.start_polling(loader.bot)
+    loader.dp.error.register(CustomLogger('logs/error_logs/general.log').loging_hanlder_errors)
+
 
 if __name__ == '__main__':
     try:

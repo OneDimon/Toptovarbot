@@ -3,6 +3,7 @@ from states.states import ConfirmLocationSeller
 from globals import CustomLogger
 from . import NameSeller, TextAddress, Photo, Comment
 from .main_class import ConfirmLocationSeller as ConfirmLocationSellerClass
+from aiogram.filters import StateFilter
 
 
 
@@ -21,7 +22,7 @@ confirm_seller_location_router.message.register(Photo().get_answer, ConfirmLocat
 confirm_seller_location_router.callback_query.register(Comment().get_answer, ConfirmLocationSeller.comment)
 confirm_seller_location_router.message.register(Comment().get_answer, ConfirmLocationSeller.comment)
 
-confirm_seller_location_router.error.register(CustomLogger('logs/error_logs/confirm_location_seller.log').loging_hanlder_errors)
+confirm_seller_location_router.error.register(CustomLogger('logs/error_logs/loader/confirm_location_seller.log').loging_hanlder_errors, StateFilter(ConfirmLocationSeller))
 
 
 

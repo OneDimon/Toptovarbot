@@ -3,6 +3,7 @@ from states.states import StateUser
 from handlers.general.user.user_class import User
 from aiogram.filters.command import Command
 from globals.logger_class import CustomLogger
+from aiogram import filters
 
 
 
@@ -25,6 +26,5 @@ user_router.callback_query.register(User.confirm_offerta, lambda c: c.data == 'c
 user_router.message.register(User.set_t_phone, lambda message: message.content_type == 'contact')
 user_router.callback_query.register(User.about_bot, lambda c: c.data == 'about_bot')
 user_router.callback_query.register(User.get_contacts_helpers, lambda c: c.data == 'contacts_supports')
-user_router.error.register(CustomLogger('logs/error_logs/user.log').loging_hanlder_errors)
 
 

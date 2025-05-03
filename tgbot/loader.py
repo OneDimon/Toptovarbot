@@ -1,4 +1,5 @@
 from config_data.config import BOT_TOKEN
+from globals.events import *
 from aiogram import Bot, Dispatcher
 from handlers.general.user.router import user_router
 from handlers.seller.location.router import location_router as location_seller_router

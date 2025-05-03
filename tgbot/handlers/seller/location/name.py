@@ -10,7 +10,7 @@ class Name(StepsBase):
         module = 'location'
         super().__init__(name, module)
 
-    async def _before_start_of_step(self, call: types.CallbackQuery, state: FSMContext):       
+    async def _before_start_of_step(self, call: types.CallbackQuery, state: FSMContext):      
         state_data = await state.get_data()
         if 'init_location' in state_data and state_data['init_location'] == True:
             return

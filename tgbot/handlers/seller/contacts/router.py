@@ -2,6 +2,7 @@ from aiogram import *
 from . import *
 from states.states import Contacts as StateContacts
 from globals.logger_class import CustomLogger
+from aiogram.filters import StateFilter
 
 
 contacts_router = Router()
@@ -28,7 +29,7 @@ contacts_router.message.register(Delete().get_answer, StateContacts.delete)
 contacts_router.callback_query.register(Add().get_answer, StateContacts.add)
 contacts_router.message.register(Add().get_answer, StateContacts.add)
 
-contacts_router.error.register(CustomLogger('logs/error_logs/contacts.log').loging_hanlder_errors)
+contacts_router.error.register(CustomLogger('logs/error_logs/seller/contacts.log').loging_hanlder_errors, StateFilter(StateContacts))
 
 
 

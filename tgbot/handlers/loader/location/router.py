@@ -2,6 +2,7 @@ from aiogram import *
 from states.states import LocationLoader as StateLocation
 from . import *
 from globals import CustomLogger
+from aiogram.filters import StateFilter
 
 
 location_router = Router()
@@ -27,4 +28,4 @@ location_router.callback_query.register(Address().get_answer, StateLocation.addr
 
 location_router.callback_query.register(Description().get_answer, StateLocation.description)
 
-location_router.error.register(CustomLogger('logs/error_logs/location_loader.log').loging_hanlder_errors)
+location_router.error.register(CustomLogger('logs/error_logs/loader/location_loader.log').loging_hanlder_errors, StateFilter(StateLocation))

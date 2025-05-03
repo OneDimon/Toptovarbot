@@ -3,6 +3,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.context import FSMContext
 from states import states
 from abc import ABC, abstractmethod
+from globals import event_dispatcher
 
 class BaseHandler:
 
@@ -103,6 +104,8 @@ class StepsBase (BaseHandler, StepsInterface):
         self.name = name
         self.module = module
         self.key_data_in_state = f'{self.module}_{self.name}'
+        self._stop_start_of_step = False
+        self._stop_get_answer = False
 
     async def start_of_step(self, call : types.CallbackQuery, state : FSMContext):
         """
@@ -111,8 +114,9 @@ class StepsBase (BaseHandler, StepsInterface):
         :param call: Callback запрос
         :param state: Контекст состояния FSM
         """
+        await event_dispatcher.dispatch(f'before_start_of_step_{self.module}_{self.name}', call = call, state = state, obj = self)
         stop_func = await self._before_start_of_step(call, state)
-        if stop_func == True:
+        if stop_func == True or self._stop_start_of_step == True:
             return
 
         new_state = await BaseHandler.get_state_object(self.name, self.module, states)
@@ -122,6 +126,8 @@ class StepsBase (BaseHandler, StepsInterface):
         message_id = await self._send_a_question(call, state)
         await self._save_message_id(message_id, call, state)
         await self._after_start_of_step(call, state)
+        await event_dispatcher.dispatch(f'after_start_of_step_{self.module}_{self.name}', call = call, state = state, obj = self)
+
 
     async def get_answer(self, call : types.CallbackQuery|types.Message, state : FSMContext):
         """
@@ -130,16 +136,19 @@ class StepsBase (BaseHandler, StepsInterface):
         :param call: Событие - сообщение или callback запрос
         :param state: Контекст состояния FSM
         """
+        await event_dispatcher.dispatch(f'before_get_answer_{self.module}_{self.name}', call = call, state = state, obj = self)
+
         stop_func = await self._check_by_message(call, state)
-        if stop_func == True:
+        if stop_func == True or self._stop_get_answer == True:
             await self.message_answer(call, 'Используйте кнопку у последнего сообщения или вернитесь в меню и попробуйте снова.')
             return
         stop_func = await self._before_get_answer(call, state)
-        if stop_func == True:
+        if stop_func == True or self._stop_get_answer == True:
             return
         
         await self._save_answer_data(call, state)
         await self._after_get_answer(call, state)
+        await event_dispatcher.dispatch(f'after_get_answer_{self.module}_{self.name}', call = call, state = state, obj = self)
         await self._go_to_next_step(call, state)
 
     async def _save_step_in_state(self, call : types.CallbackQuery|types.Message, state : FSMContext):

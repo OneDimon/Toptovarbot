@@ -79,3 +79,7 @@ class Admin(StatesGroup):
 class LocationConfirmation(StatesGroup):
     confirmation = State()
     comment = State()
+
+class AddingAdminRights(StatesGroup):
+    add = State()
+

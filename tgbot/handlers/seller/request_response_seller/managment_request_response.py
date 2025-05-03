@@ -3,6 +3,7 @@ from handlers.seller.request_response_seller.response_seller import ResponseSell
 from handlers.seller.request_response_seller.request_response_states import ResponseSeller as RS_state
 from aiogram.fsm.context import FSMContext
 from globals import CustomLogger
+from aiogram.filters import StateFilter
 
 router_request_response = Router()
 respons_obj = ResponseSeller()
@@ -36,7 +37,7 @@ class RequestResponseManager:
         router_request_response.callback_query.register(respons_obj.add_more_goods_click, lambda c: c.data == 'add_more_goods_click', RS_state.there_is_a_product_quantity_uploaded)   
         router_request_response.callback_query.register(respons_obj.finally_adding_click, lambda c: c.data == 'finall_adding_click', RS_state.there_is_a_product_quantity_uploaded)
 
-        router_request_response.error.register(CustomLogger('logs/error_logs/request_response.log').loging_hanlder_errors)
+        router_request_response.error.register(CustomLogger('logs/error_logs/seller/request_response.log').loging_hanlder_errors, StateFilter(RS_state))
 
     async def responseButtonClik(call: types.CallbackQuery, state: FSMContext):
         global router_request_response

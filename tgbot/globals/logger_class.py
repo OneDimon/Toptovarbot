@@ -24,6 +24,7 @@ class CustomLogger:
     async def logging_info_user_action(self, user: types.User, text: str) -> None:
         from aiogram import types    
         import json 
+
         logger.add(self.log_file, format="{time} {level} {message}", level="INFO", rotation="10 MB", compression="zip", backtrace=True, diagnose=True)
         logger.info(
             f"Пользователь :{json.dumps(user.model_dump(), indent=4, ensure_ascii=False, default=str) if isinstance(user, types.User) else pprint.pformat(user)}"
