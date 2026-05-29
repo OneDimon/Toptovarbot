@@ -4,11 +4,11 @@ header('Access-Control-Allow-Origin: *');
 
 
 // Параметры подключения к базе данных
-$host = "localhost";
-$dbname = "botTovar";
-$user = "postgres";
-$password = "qwer1234";
-$port = "5432";
+$host     = getenv("DB_HOST")     ?: "localhost";
+$dbname   = getenv("DB_NAME")     ?: "botTovar";
+$user     = getenv("DB_USER")     ?: "postgres";
+$password = getenv("DB_PASSWORD") ?: "";
+$port     = getenv("DB_PORT")     ?: "5432";
 
 
 $db = pg_connect("host=$host dbname=$dbname user=$user password=$password port=$port");
