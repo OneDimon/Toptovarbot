@@ -61,7 +61,7 @@ class TopUp (StepsBase):
         system_balance = await SystemInfoDatabase.get_system_info('system_balance')
         if system_balance == None:
             system_balance = 0
-        system_balance += call.text
+        system_balance += int(call.text)
         await SystemInfoDatabase.set_system_info('system_balance', system_balance)
         await CustomLogger('logs/acton_log/tup_up_balance.log').logging_info_user_action(call.from_user, f'пополнение баланса системы на сумму {call.text} прошло успешно')
 
