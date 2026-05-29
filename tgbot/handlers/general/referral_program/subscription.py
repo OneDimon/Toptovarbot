@@ -42,7 +42,7 @@ class Subscription (BaseHandler):
             await CustomLogger('logs/acton_log/buy_subscription.log').logging_info_user_action(call.from_user, 'недостаточно баллов для покупки подписки')
 
         else:
-            await self._buy_subscription_mid(call, call, state, price_subscription, type_subscription)
+            await self._buy_subscription_mid(call, state, price_subscription, type_subscription)
 
     
     async def _get_text_menu(self, data_user_ref_program)->str:
