@@ -46,3 +46,6 @@ config.codekit
 /wa-system/webasyst/lib/updates/dev
 .idea
 .jpg
+# Vue / Node
+vue_site/node_modules/
+vue_site/dist/
