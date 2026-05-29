@@ -141,9 +141,9 @@ class User (BaseHandler):
     @staticmethod
     async def get_contacts_helpers(call : types.CallbackQuery, state : FSMContext):
         text = ("Нужна помощь? Свяжитесь с нами одним из спсобов:\n"
-                "Telegram - @testTelegram\n"
-                "WhatsApp - @testWhatsap\n"
-                "почта - test@yandex.ru")
+                "Telegram - @opttovar_support\n"
+                "WhatsApp - https://wa.me/your_number\n"
+                "почта - support@opttovar.ru")
         await call.answer(text)
 
     @staticmethod
