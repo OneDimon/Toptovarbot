@@ -80,3 +80,15 @@ class LocationConfirmation(StatesGroup):
 
 class AddingAdminRights(StatesGroup):
     add = State()
+
+class DeliveryOrderCreate(StatesGroup):
+    """Покупатель создаёт заявку на отгрузку."""
+    description  = State()
+    address_from = State()
+    address_to   = State()
+    confirm      = State()
+
+class DeliveryOrderComplete(StatesGroup):
+    """Грузчик завершает заявку."""
+    photo   = State()
+    comment = State()
