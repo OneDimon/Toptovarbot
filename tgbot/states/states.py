@@ -13,7 +13,6 @@ class Location(StatesGroup):
     line = State()
     place = State()
     address = State()
-    name = State()
     photo = State()
     description = State()
 
@@ -24,7 +23,6 @@ class LocationLoader(StatesGroup):
     floar = State()
     line = State()
     address = State()
-    name = State()
     description = State()
 
 class Contacts(StatesGroup):
@@ -82,4 +80,3 @@ class LocationConfirmation(StatesGroup):
 
 class AddingAdminRights(StatesGroup):
     add = State()
-
