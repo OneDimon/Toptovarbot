@@ -20,11 +20,12 @@ class HistoryTransactionDatabase(base.BaseDatabase):
 
     @staticmethod
     async def set_history_transaction(user_id: int, amount: float, type: str):
-        query = f"""INSERT INTO history_transaction (USER_ID, AMOUNT, AMOUNT_RUB, TYPE) VALUES ({user_id}, {amount}, {amount * 200}, '{type}')"""
-        await HistoryTransactionDatabase.query_database(HistoryTransactionDatabase(), query)
+        amount_rub = amount * 200
+        query = """INSERT INTO history_transaction (USER_ID, AMOUNT, AMOUNT_RUB, TYPE) VALUES (%s, %s, %s, %s)"""
+        await HistoryTransactionDatabase.query_database(HistoryTransactionDatabase(), query, (user_id, amount, amount_rub, type))
 
     @staticmethod
     async def get_history_transaction_from_user(user_id: int):
-        query = f"""SELECT * FROM history_transaction WHERE USER_ID = {user_id} ORDER BY DATE_TIME DESC"""
-        all_data = await HistoryTransactionDatabase.query_database(HistoryTransactionDatabase(), query)
+        query = """SELECT * FROM history_transaction WHERE USER_ID = %s ORDER BY DATE_TIME DESC"""
+        all_data = await HistoryTransactionDatabase.query_database(HistoryTransactionDatabase(), query, (user_id,))
         return all_data
