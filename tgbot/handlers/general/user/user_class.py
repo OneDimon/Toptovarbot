@@ -328,6 +328,12 @@ class User (BaseHandler):
             text="👫 Реферальная программа", callback_data="referral_program")
         )
         builder.row(types.InlineKeyboardButton(
+            text="📦 Заявки на отгрузку", callback_data="delivery_open_orders")
+        )
+        builder.add(types.InlineKeyboardButton(
+            text="📋 Мои заказы", callback_data="delivery_my_orders")
+        )
+        builder.row(types.InlineKeyboardButton(
             text="👫 Подтвердить локацию продавца", callback_data="confirm_location_seller")
         )
         builder.row(types.InlineKeyboardButton(text="💸 перейти к балансу", callback_data="balance_menu"))
@@ -352,6 +358,12 @@ class User (BaseHandler):
         )
         builder.add(types.InlineKeyboardButton(
             text="👥 Продавцы по категориям", callback_data="categories_search")
+        )
+        builder.row(types.InlineKeyboardButton(
+            text="🚛 Заказать отгрузку", callback_data="buyer_create_delivery")
+        )
+        builder.add(types.InlineKeyboardButton(
+            text="📋 Мои заявки на отгрузку", callback_data="buyer_my_deliveries")
         )
         builder.row(types.InlineKeyboardButton(
             text="🤖 О боте", callback_data="about_bot")
