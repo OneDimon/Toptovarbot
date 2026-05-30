@@ -14,6 +14,9 @@ from handlers.seller.request_response_seller.managment_request_response import r
 from handlers.loader.location.router import location_router as location_loader_router
 from handlers.loader.confirm_location_seller.router import confirm_seller_location_router
 from handlers.admin.router import admin_router
+from handlers.loader.delivery_order.router import delivery_order_router
+from handlers.buyer.delivery_order.router import buyer_delivery_router
+
 
 
 bot = Bot(BOT_TOKEN, parse_mode="HTML")
@@ -32,4 +35,7 @@ RequestResponseManager.initRouter()
 dp.include_router(router=location_loader_router)
 dp.include_router(router=confirm_seller_location_router)
 dp.include_router(router=admin_router)
+dp.include_router(router=delivery_order_router)
+dp.include_router(router=buyer_delivery_router)
+
 
